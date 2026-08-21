@@ -11,8 +11,20 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kayoz Mistry — Head Media Technology | Portfolio</title>
-<meta name="description" content="Kayoz Mistry — Media technology leader with 14+ years driving enterprise-grade broadcast implementations, ERP system rollouts, AdTech platform deployments, and AI-powered automation across four continents.">
+<title>Kayoz Mistry — Head of Media Technology | Portfolio</title>
+<meta name="description" content="Kayoz Mistry — Media technology leader with 15+ years across BMS and RMS platforms, ERP/SAP integration, AdTech and AI-powered automation. Currently directing Warner Bros. Discovery USA AdTech operations (50+ applications) and the RightsU rights management rollout at JioStar, India's largest broadcaster.">
+<link rel="canonical" href="https://kayozdmistry.github.io/Kayoz.Mistry.Portfolio/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kayozdmistry.github.io/Kayoz.Mistry.Portfolio/">
+<meta property="og:title" content="Kayoz Mistry — Head of Media Technology">
+<meta property="og:description" content="15+ years across BMS and RMS platforms, ERP/SAP integration, and enterprise AdTech. Currently directing Warner Bros. Discovery USA AdTech operations and the RightsU rollout at JioStar.">
+<meta property="og:image" content="https://kayozdmistry.github.io/Kayoz.Mistry.Portfolio/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kayoz Mistry — Head of Media Technology">
+<meta name="twitter:description" content="15+ years in media technology — BMS and RMS, ERP/SAP, AdTech, AI. 12 deployments across 4 continents.">
+<meta name="twitter:image" content="https://kayozdmistry.github.io/Kayoz.Mistry.Portfolio/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +39,6 @@ body {
   background: #FAF7F2;
   color: #2A2A2A;
   overflow-x: hidden;
-  cursor: none;
   line-height: 1.6;
 }
 
@@ -83,39 +94,6 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════
-   CUSTOM CURSOR
-   ═══════════════════════════════════════════ */
-.cursor-dot {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: var(--coral);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10002;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s var(--spring);
-}
-.cursor-ring {
-  position: fixed;
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid var(--coral);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10002;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s var(--spring), height 0.3s var(--spring), border-color 0.3s;
-  opacity: 0.6;
-}
-.cursor-ring.hovering {
-  width: 56px;
-  height: 56px;
-  border-color: var(--teal);
-  opacity: 0.9;
-}
-
-/* ═══════════════════════════════════════════
    NAVIGATION
    ═══════════════════════════════════════════ */
 .nav {
@@ -157,7 +135,7 @@ body::before {
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
   position: relative;
   padding-bottom: 4px;
@@ -173,9 +151,9 @@ body::before {
   background: var(--coral);
   transition: width 0.4s var(--spring);
 }
-.nav-links a.active { color: var(--text-primary); }
+.nav-links a.active { color: #FFFFFF; }
 .nav-links a.active::after { width: 100%; }
-.nav-links a:hover { color: var(--text-primary); }
+.nav-links a:hover { color: #FFFFFF; }
 .nav-right {
   display: flex;
   align-items: center;
@@ -184,7 +162,7 @@ body::before {
 .nav-clock {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.02em;
 }
 
@@ -360,7 +338,6 @@ body::before {
   background: var(--coral);
   color: #fff;
   text-decoration: none;
-  cursor: none;
   transition: transform 0.3s var(--spring), box-shadow 0.3s;
 }
 .btn-primary:hover {
@@ -380,7 +357,6 @@ body::before {
   background: transparent;
   color: var(--text-light);
   text-decoration: none;
-  cursor: none;
   transition: transform 0.3s var(--spring), background 0.3s, color 0.3s;
 }
 .btn-outline:hover {
@@ -1241,8 +1217,6 @@ body::before {
   .quote-section { padding: 80px 20px; }
   .contact-section { padding: 80px 20px; }
   .footer { padding: 24px 20px; }
-  body { cursor: auto; }
-  .cursor-dot, .cursor-ring { display: none; }
   .impl-outer-grid { grid-template-columns: 1fr; }
   .edu-item { grid-template-columns: 1fr; gap: 8px; }
   .hero-stats-row { grid-template-columns: 1fr !important; gap: 24px !important; }
@@ -1262,6 +1236,52 @@ body::before {
   .btn-primary, .btn-outline { padding: 12px 20px; font-size: 0.82rem; }
   .hero-stats-inner { flex-direction: column; align-items: flex-start; }
 }
+
+/* ═══════════════════════════════════════════
+   CASE STUDIES
+   ═══════════════════════════════════════════ */
+.case-study {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+}
+.case-study:last-child { border-bottom: 1px solid var(--border); }
+.case-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 12px;
+}
+.case-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 22px;
+}
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.case-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.case-grid p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+  .case-grid { grid-template-columns: 1fr; gap: 18px; }
+}
 </style>
 </head>
 <body>
@@ -1270,8 +1290,6 @@ body::before {
 <div id="scroll-progress"></div>
 
 <!-- Custom Cursor -->
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
 
 <!-- ═══════════════════════════════════════════
      NAVIGATION
@@ -1300,29 +1318,31 @@ body::before {
         <img src="profile.png" alt="Kayoz Mistry" class="profile-photo">
         <div>
           <div style="font-family:'Playfair Display',serif; font-size:clamp(36px,8vw,96px); font-weight:500; line-height:1.05; letter-spacing:-0.02em; color:var(--text-light);">Kayoz <em style="font-style:italic; color:var(--coral); font-weight:400;">Mistry</em></div>
-          <div style="font-family:'Outfit',sans-serif; font-size:clamp(14px,4vw,18px); font-weight:600; color:var(--text-light); margin-top:10px;">Head Media Technology</div>
+          <div style="font-family:'Outfit',sans-serif; font-size:clamp(14px,4vw,18px); font-weight:600; color:var(--text-light); margin-top:10px;">Head &mdash; Media Technology</div>
           <div style="font-family:'Outfit',sans-serif; font-size:clamp(12px,3.5vw,15px); color:rgba(255,255,255,0.45); margin-top:4px;">Mumbai, Maharashtra, India</div>
         </div>
       </div>
       <!-- meta time removed -->
       <h1 class="hero-headline reveal reveal-delay-2">
-        Bridging Broadcast<br>&amp; Beyond.<br>
+        Bridging Broadcast<br>&amp; AdTech.<br>
         <span class="tag tag-coral">BMS &amp; RMS</span>
-        <span class="tag tag-teal">ERP Integration</span>
-        <span class="tag tag-gold">AdTech</span>
+        <span class="tag tag-teal">AdTech</span>
+        <span class="tag tag-gold">ERP Integration</span>
         <span class="tag tag-lavender">AI Automation</span>
-        <span class="tag tag-coral">Strategic Leadership</span>
-        <span class="tag tag-teal">CSPO&reg;</span>
       </h1>
       <div class="hero-roles reveal reveal-delay-3">
         <span class="hero-roles-label">Specialist in</span>
         <span class="hero-roles-chip fade-in" id="heroRoleChip">Broadcast Management Systems</span>
       </div>
       <p class="hero-summary reveal reveal-delay-4">
-        Media technology leader with <strong>14+ years</strong> driving enterprise-grade broadcast implementations,
-        ERP system rollouts, AdTech platform deployments, and AI-powered automation across <strong>four continents</strong>.
-        From legacy Broadcast Management System (BMS) migrations to cutting-edge OTT launches, I translate complex stakeholder needs into
-        scalable, revenue-generating technology ecosystems.
+        Media technology leader with <strong>15+ years</strong> taking broadcast platforms from pre-sales through
+        implementation and into long-term operations &mdash; across <strong>BMS &amp; RMS</strong>,
+        <strong>ERP &amp; SAP</strong> integration, AI-powered automation, and <strong>enterprise AdTech ecosystems</strong>.
+        From the Sony Entertainment Television rollout in 2012 to SABC's go-live in 2024, I've delivered
+        <strong>12 major deployments</strong> across <strong>four continents</strong> &mdash; for Viacom18, Network18,
+        Tata Play, Econet Media, Sentech, and more. Today, that means AdTech operations for Warner Bros. Discovery USA
+        (50+ applications) and the RightsU rollout at JioStar, India's largest broadcaster &mdash; delivering systems
+        that cut costs, protect <strong>99.9% uptime</strong>, and grow ad revenue.
       </p>
       <div class="hero-ctas reveal reveal-delay-5">
         <a href="#connect" class="btn-primary">
@@ -1333,13 +1353,17 @@ body::before {
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M4 10l4 4 4-4"/></svg>
           View Journey
         </a>
+        <a href="Kayoz_Mistry_Resume.pdf" download class="btn-outline">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v8M4 7l4 4 4-4M3 13h10"/></svg>
+          Download Resume
+        </a>
       </div>
     </div>
     <!-- Hero sub-row: editorial style -->
     <div class="hero-stats-row reveal reveal-delay-4" style="display:grid; grid-template-columns:1fr auto; gap:60px; align-items:end; margin-top:48px; padding-top:32px; border-top:1px solid rgba(255,255,255,0.08);">
       <div class="hero-stats-inner" style="display:flex; gap:clamp(12px,3vw,32px); flex-wrap:nowrap; align-items:center;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-family:'Playfair Display',serif; font-size:clamp(22px,5vw,32px); font-weight:600; color:var(--coral); line-height:1;">14+</span>
+          <span style="font-family:'Playfair Display',serif; font-size:clamp(22px,5vw,32px); font-weight:600; color:var(--coral); line-height:1;">15+</span>
           <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(8px,2vw,9px); color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; line-height:1.2;">Years in<br>Media Tech</span>
         </div>
         <div class="stat-divider" style="width:1px; height:32px; background:rgba(255,255,255,0.1);"></div>
@@ -1360,7 +1384,7 @@ body::before {
       </div>
       <div class="available-status" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,0.45); letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
         <span style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px rgba(16,185,129,0.5);"></span>
-        Available for opportunities
+        Open to conversations
       </div>
     </div>
   </div>
@@ -1376,15 +1400,15 @@ body::before {
 <div class="hr-strip-wrapper">
   <div class="hr-strip">
     <div class="hr-stat reveal">
-      <span class="hr-stat-number" data-target="10" data-suffix="+">0</span>
+      <span class="hr-stat-number" data-target="12" data-suffix="">0</span>
       <div class="hr-stat-label">Global Deployments</div>
     </div>
     <div class="hr-stat reveal reveal-delay-1">
       <span class="hr-stat-number" data-target="18" data-suffix="">0</span>
-      <div class="hr-stat-label">Solutions Built</div>
+      <div class="hr-stat-label">Solutions Delivered</div>
     </div>
     <div class="hr-stat reveal reveal-delay-2">
-      <span class="hr-stat-number" data-target="13" data-suffix="+">0</span>
+      <span class="hr-stat-number" data-target="14" data-suffix="+">0</span>
       <div class="hr-stat-label">Clients Served</div>
     </div>
     <div class="hr-stat reveal reveal-delay-3">
@@ -1392,7 +1416,7 @@ body::before {
       <div class="hr-stat-label">Uptime Delivered</div>
     </div>
     <div class="hr-stat reveal reveal-delay-4">
-      <span class="hr-stat-number">India &middot; UAE &middot; S. Africa &middot; PNG</span>
+      <span class="hr-stat-number">India &middot; USA &middot; UAE &middot; S. Africa &middot; PNG</span>
       <div class="hr-stat-label">Regions Covered</div>
     </div>
   </div>
@@ -1406,7 +1430,8 @@ body::before {
   <div class="marquee-track" id="marqueeTrack">
     <span class="marquee-item">Sony Pictures Networks</span>
     <span class="marquee-item">Viacom18</span>
-    <span class="marquee-item">Warner Bros</span>
+    <span class="marquee-item">JioStar</span>
+    <span class="marquee-item">Warner Bros. Discovery</span>
     <span class="marquee-item">SABC</span>
     <span class="marquee-item">Tata Play</span>
     <span class="marquee-item">Network18</span>
@@ -1420,7 +1445,8 @@ body::before {
     <!-- Duplicate for seamless loop -->
     <span class="marquee-item">Sony Pictures Networks</span>
     <span class="marquee-item">Viacom18</span>
-    <span class="marquee-item">Warner Bros</span>
+    <span class="marquee-item">JioStar</span>
+    <span class="marquee-item">Warner Bros. Discovery</span>
     <span class="marquee-item">SABC</span>
     <span class="marquee-item">Tata Play</span>
     <span class="marquee-item">Network18</span>
@@ -1452,32 +1478,24 @@ body::before {
 
       <p class="about-body reveal reveal-delay-1">
         <strong style="color:var(--text-primary);">On Leadership:</strong>
-        I lead cross-functional teams of engineers, implementation specialists, and client success managers &mdash; setting technical direction, defining KPIs, and building a culture where people take ownership. I report directly to the Board, own the technology budget and roadmap, and conduct C-level business reviews with clients across four continents. Over 14 years, I grew from an individual contributor to Head of Media Technology &mdash; a trajectory built on trust, results, and the ability to develop the people around me.
+        I lead cross-functional teams of engineers, implementation specialists, and client success managers &mdash; setting technical direction, defining KPIs, and building a culture where people take ownership. I report directly to the Board, own the technology budget and roadmap, and conduct C-level business reviews with clients across four continents &mdash; a mandate that today spans Warner Bros. Discovery USA's 50+ application AdTech ecosystem and the RightsU rollout at JioStar. Over 15 years and five roles at the same company, I grew from an individual contributor to Head of Media Technology &mdash; a trajectory built on trust, results, and the ability to develop the people around me.
       </p>
 
       <p class="about-body reveal reveal-delay-2">
         <strong style="color:var(--text-primary);">On BMS Implementation:</strong>
-        I have led 10+ end-to-end Broadcast Management System deployments for organisations including Sony Pictures Networks, Viacom18, SABC, Warner Bros, and Tata Play. My BMS expertise covers broadcast scheduling, ad sales traffic management, rights clearance, EPG generation, and playout integration. From greenfield rollouts to complex migrations (including BroadView transitions and AWS cloud migrations), I ensure every implementation delivers operational reliability and commercial value.
+        I have led 12 end-to-end Broadcast Management System deployments for organisations including Sony Pictures Networks, Viacom18, SABC, Warner Bros. Discovery, and Tata Play. My BMS expertise covers broadcast scheduling, ad sales traffic management, rights clearance, EPG generation, and playout integration. From greenfield rollouts to complex migrations (including BroadView transitions and AWS cloud migrations), I ensure every implementation delivers operational reliability and commercial value.
       </p>
 
       <p class="about-body reveal reveal-delay-3">
         <strong style="color:var(--text-primary);">On RMS &amp; ERP Integration:</strong>
-        I architect and deliver Rights Management System implementations that give broadcasters full control over content licensing, territorial rights, and compliance. I also bridge RMS and BMS with enterprise ERP systems &mdash; integrating SAP for finance, invoicing, amortisation, and revenue assurance. This end-to-end approach eliminates silos and gives leadership a single source of truth across rights, scheduling, and revenue.
+        I architect and deliver Rights Management System implementations that give broadcasters full control over content licensing, territorial rights, and compliance &mdash; currently leading the RightsU implementation at JioStar, India's largest broadcaster. I also bridge RMS and BMS with enterprise ERP systems &mdash; integrating SAP for finance, invoicing, amortisation, and revenue assurance. This end-to-end approach eliminates silos and gives leadership a single source of truth across rights, scheduling, and revenue.
       </p>
 
       <p class="about-body reveal reveal-delay-4">
         <strong style="color:var(--text-primary);">On Impact:</strong>
-        My teams have reduced operational costs by 40% through automation and process re-engineering, achieved 99.9% broadcast uptime through HA/DR architecture, and increased response efficiency by 30% through AI-powered workflows and self-service portals. I've delivered solutions across India, UAE, South Africa, and Papua New Guinea &mdash; always with a disciplined, client-first approach.
+        My teams have reduced operational costs by 40% through automation and process re-engineering, achieved 99.9% broadcast uptime through HA/DR architecture, and increased response efficiency by 30% through AI-powered workflows and self-service portals. I've delivered solutions across India, the UAE, South Africa, Papua New Guinea, and the USA &mdash; always with a disciplined, client-first approach.
       </p>
 
-      <div class="about-pills reveal reveal-delay-5">
-        <div class="pill"><span class="pill-dot" style="background:var(--coral)"></span> 14+ Years Experience</div>
-        <div class="pill"><span class="pill-dot" style="background:var(--teal)"></span> 10+ BMS Deployments</div>
-        <div class="pill"><span class="pill-dot" style="background:var(--gold)"></span> 40% Cost Reduction</div>
-        <div class="pill"><span class="pill-dot" style="background:var(--lavender)"></span> 99.9% Uptime</div>
-        <div class="pill"><span class="pill-dot" style="background:var(--coral)"></span> 30% AI Efficiency</div>
-        <div class="pill"><span class="pill-dot" style="background:var(--teal)"></span> 4 Continents</div>
-      </div>
     </div>
   </div>
 </section>
@@ -1489,7 +1507,7 @@ body::before {
   <div class="section">
     <div class="expertise-header reveal">
       <h2>Four disciplines. One cohesive practice.</h2>
-      <p>Converging broadcast, enterprise, OTT, and AI into unified media technology solutions.</p>
+      <p>Converging broadcast, AdTech, enterprise, and AI into unified media technology solutions.</p>
     </div>
     <div class="expertise-cards">
       <div class="expertise-card card-coral reveal">
@@ -1497,10 +1515,18 @@ body::before {
         <h3>BMS &amp; RMS Platforms</h3>
         <p>End-to-end broadcast management &mdash; scheduling, traffic, ad sales, rights clearance, EPG generation, and revenue assurance for linear TV, radio, and multi-channel networks.</p>
         <div class="expertise-tags">
-          <span>Broadcast Scheduling</span><span>Traffic</span><span>Ad Sales</span><span>Rights Clearance</span><span>BroadView</span><span>EPG</span><span>Revenue Assurance</span>
+          <span>Broadcast Scheduling</span><span>Traffic</span><span>Ad Sales</span><span>Rights Clearance</span><span>BroadView</span><span>RightsU</span><span>EPG</span><span>Revenue Assurance</span>
         </div>
       </div>
       <div class="expertise-card card-teal reveal reveal-delay-1">
+        <span class="card-badge">Monetization</span>
+        <h3>AdTech Ecosystems</h3>
+        <p>The complete ad lifecycle at enterprise scale &mdash; 50+ applications spanning ad booking and order management, traffic and scheduling, playout and ad insertion (SSAI/CSAI), as-run and log reconciliation, makegoods, billing, and revenue reporting across linear, CTV, and streaming.</p>
+        <div class="expertise-tags">
+          <span>Ad Booking</span><span>Traffic &amp; Scheduling</span><span>Playout &amp; Insertion</span><span>As-Run &amp; Log Recon</span><span>Billing &amp; Revenue</span><span>CTV &amp; Streaming</span>
+        </div>
+      </div>
+      <div class="expertise-card card-gold reveal reveal-delay-2">
         <span class="card-badge">Enterprise</span>
         <h3>ERP &amp; System Integration</h3>
         <p>SAP-integrated finance, invoicing, amortization, and revenue reporting. API bridging between broadcast and enterprise systems with real-time BI dashboards.</p>
@@ -1508,20 +1534,12 @@ body::before {
           <span>SAP</span><span>Finance / Invoicing</span><span>Amortization</span><span>Revenue Assurance</span><span>API Bridging</span><span>BI Dashboards</span>
         </div>
       </div>
-      <div class="expertise-card card-gold reveal reveal-delay-2">
-        <span class="card-badge">Digital</span>
-        <h3>OTT &amp; AdTech</h3>
-        <p>FAST channel orchestration, server/client-side ad insertion (SSAI/CSAI), SCTE-35 signaling, geo-targeting, and CTV monetization across AVOD/SVOD/FAST models.</p>
-        <div class="expertise-tags">
-          <span>FAST Channels</span><span>SSAI / CSAI</span><span>SCTE-35</span><span>Geo-Targeting</span><span>CTV</span><span>AVOD / SVOD</span>
-        </div>
-      </div>
       <div class="expertise-card card-lavender reveal reveal-delay-3">
-        <span class="card-badge">Innovation</span>
-        <h3>AI &amp; Digital Transformation</h3>
-        <p>AI-driven workflow automation, intelligent chatbots, cloud migration (AWS/Azure), high-availability/disaster recovery architectures, and predictive analytics.</p>
+        <span class="card-badge">Digital</span>
+        <h3>OTT, Cloud &amp; AI</h3>
+        <p>FAST channel orchestration and OTT platform delivery, cloud migration (AWS/Azure), AI-driven workflow automation, intelligent chatbots, and high-availability/disaster recovery architectures.</p>
         <div class="expertise-tags">
-          <span>AI Workflows</span><span>Chatbots</span><span>AWS / Azure</span><span>HA / DR</span><span>Automation</span><span>Cloud Migration</span>
+          <span>OTT Platforms</span><span>FAST Channels</span><span>AWS / Azure</span><span>AI Workflows</span><span>Chatbots</span><span>HA / DR</span>
         </div>
       </div>
     </div>
@@ -1540,41 +1558,45 @@ body::before {
     <div class="timeline-items">
       <div class="timeline-item reveal">
         <div class="timeline-date">Apr 2025 &mdash; Present</div>
-        <h3 class="timeline-role">Head Media Technology</h3>
+        <h3 class="timeline-role">Head &mdash; Media Technology</h3>
         <div class="timeline-company">UTO Solutions &mdash; Mumbai, India</div>
         <p class="timeline-desc">
-          Leading technology strategy for BMS/RMS/ERP product lines. Driving AI and automation initiatives,
-          managing cross-functional teams, and reporting directly to the Board. Owning the product roadmap,
-          pre-sales engineering, and C-level client relationships across global accounts.
+          Directing AdTech operations for Warner Bros. Discovery (WBD) USA as part of the reverse engineering
+          team managing and supporting 50+ applications across ad sales, traffic, scheduling, and revenue workflows.
+          Implementing RightsU, an enterprise Rights Management System, at JioStar &mdash; India's largest broadcaster.
+          Owning the technology roadmap and budget, driving AI and automation across BMS/RMS/ERP estates, and
+          reporting directly to the Board.
         </p>
         <div class="timeline-highlights">
-          <span class="timeline-highlight">BMS/RMS/ERP Strategy</span>
-          <span class="timeline-highlight teal">AI &amp; Automation</span>
-          <span class="timeline-highlight gold">C-Level Relationships</span>
+          <span class="timeline-highlight">WBD USA &mdash; 50+ Apps</span>
+          <span class="timeline-highlight teal">JioStar RightsU Rollout</span>
+          <span class="timeline-highlight gold">AI &amp; Automation</span>
         </div>
       </div>
       <div class="timeline-item reveal">
-        <div class="timeline-date">2022 &mdash; Apr 2025</div>
+        <div class="timeline-date">Jan 2023 &mdash; Apr 2025</div>
         <h3 class="timeline-role">Senior Manager &mdash; Client Services &amp; Implementation</h3>
         <div class="timeline-company">UTO Solutions &mdash; Mumbai, India</div>
         <p class="timeline-desc">
-          Led pre-sales for BMS/RMS solutions. Launched an AI-powered chatbot that improved response speed by 30%
-          and a self-service client portal. Managed implementations across India, UAE, South Africa, and Papua New Guinea.
+          Senior SME and project lead for the SABC BroadView implementation in Johannesburg (go-live Dec 2024)
+          and the Sentech FreeVision OTT launch across web, TV, and mobile (Apr 2024). Led the Sony BroadView migration
+          to AWS, ran pre-sales for BMS/RMS platforms, and launched an AI-powered support chatbot that improved
+          response speed by 30% alongside a self-service client portal.
         </p>
         <div class="timeline-highlights">
-          <span class="timeline-highlight">AI Chatbot Launch</span>
-          <span class="timeline-highlight teal">30% Faster Response</span>
-          <span class="timeline-highlight gold">4 Countries</span>
+          <span class="timeline-highlight">SABC Go-Live 2024</span>
+          <span class="timeline-highlight teal">FreeVision OTT Launch</span>
+          <span class="timeline-highlight gold">AWS Migration</span>
         </div>
       </div>
       <div class="timeline-item reveal">
-        <div class="timeline-date">2017 &mdash; 2025</div>
+        <div class="timeline-date">2017 &mdash; 2023</div>
         <h3 class="timeline-role">Manager &mdash; Client Service &amp; Implementation</h3>
         <div class="timeline-company">UTO Solutions &mdash; Mumbai, India</div>
         <p class="timeline-desc">
-          Built automation frameworks that reduced workload by 25% and processing time by 40%.
-          Architected HA/DR solutions delivering 99.9% uptime. Managed a global client portfolio including
-          Sony Pictures Networks, Viacom18, Tata Play, Warner Bros, and SABC. Authored BRDs, SOPs, and SOWs
+          Drove automation across scheduling and traffic operations, cutting workload by 25% and processing time by 40%.
+          Architected HA/DR solutions delivering 99.9% uptime. Ongoing SME to a global client portfolio including
+          Sony Pictures Networks, Viacom18, Tata Play, and Warner Bros. Authored BRDs, SOPs, and SOWs
           for enterprise engagements.
         </p>
         <div class="timeline-highlights">
@@ -1588,11 +1610,12 @@ body::before {
         <h3 class="timeline-role">Assistant Manager</h3>
         <div class="timeline-company">UTO Solutions &mdash; Mumbai, India</div>
         <p class="timeline-desc">
-          Delivered onsite client training and user acceptance testing. Created wireframes and UX prototypes
-          using Indigo Studio and Axure. Drove change management processes for system migrations.
+          Onsite implementation lead for Econet Media / Kwes&eacute; TV in Johannesburg &mdash; taking the BMS live for
+          the pan-African broadcaster and training local teams. Ran UAT and post-implementation validation, and
+          built wireframes and UX prototypes using Indigo Studio and Axure.
         </p>
         <div class="timeline-highlights">
-          <span class="timeline-highlight">Onsite Delivery</span>
+          <span class="timeline-highlight">Kwes&eacute; TV Go-Live</span>
           <span class="timeline-highlight teal">UAT &amp; QA</span>
           <span class="timeline-highlight lavender">UX Prototyping</span>
         </div>
@@ -1602,8 +1625,9 @@ body::before {
         <h3 class="timeline-role">Client Service Executive</h3>
         <div class="timeline-company">UTO Solutions &mdash; Mumbai, India</div>
         <p class="timeline-desc">
-          Managed full SDLC participation from requirements through deployment. Led QA processes, managed
-          JIRA and ZOHO workflows, and executed onsite implementations for broadcast clients.
+          First major implementation: the Sony Entertainment Television BroadView rollout in Mumbai (2012),
+          followed by onsite rollouts for Viacom18, Network18, Tata Sky, and clients across the UAE and Papua
+          New Guinea. Managed the full SDLC from requirements through deployment, with QA tracked in JIRA and Zoho.
         </p>
         <div class="timeline-highlights">
           <span class="timeline-highlight">Full SDLC</span>
@@ -1625,7 +1649,7 @@ body::before {
       Global Reach
     </div>
     <div>
-      <h2 class="impl-headline reveal">12 deployments across <em>4 continents</em></h2>
+      <h2 class="impl-headline reveal">12 deployments &middot; clients across <em>4 continents</em></h2>
       <div class="impl-outer-grid">
         <!-- India -->
         <div class="region-card reveal">
@@ -1688,7 +1712,7 @@ body::before {
           <div class="region-meta">3 deployments &middot; Johannesburg</div>
           <hr class="region-divider">
           <div class="deploy-row">
-            <div><div class="deploy-name">Econet Media / Kwese TV</div><div class="deploy-city">Johannesburg</div></div>
+            <div><div class="deploy-name">Econet Media / Kwes&eacute; TV</div><div class="deploy-city">Johannesburg</div></div>
             <span class="deploy-year">2016-17</span>
           </div>
           <div class="deploy-row">
@@ -1731,28 +1755,38 @@ body::before {
     <div>
       <div class="projects-featured">
         <div class="project-card reveal">
+          <div class="project-card-date">2025 &mdash; Present</div>
+          <h3>Warner Bros. Discovery AdTech Portfolio</h3>
+          <div class="project-card-location">USA &mdash; 50+ Applications Managed</div>
+        </div>
+        <div class="project-card reveal reveal-delay-1">
+          <div class="project-card-date">2025 &mdash; Present</div>
+          <h3>JioStar RightsU Implementation</h3>
+          <div class="project-card-location">India's Largest Broadcaster &mdash; RMS Rollout</div>
+        </div>
+        <div class="project-card reveal reveal-delay-2">
           <div class="project-card-date">Dec 2024</div>
           <h3>SABC BroadView Implementation</h3>
           <div class="project-card-location">South Africa &mdash; National Broadcaster</div>
         </div>
-        <div class="project-card reveal reveal-delay-1">
+        <div class="project-card reveal reveal-delay-3">
           <div class="project-card-date">Apr 2024</div>
           <h3>FreeVision OTT Launch</h3>
           <div class="project-card-location">Sentech Media &mdash; South Africa</div>
         </div>
-        <div class="project-card reveal reveal-delay-2">
+        <div class="project-card reveal reveal-delay-4">
           <div class="project-card-date">Feb 2023</div>
-          <h3>BroadView AWS Migration</h3>
+          <h3>Sony BroadView AWS Migration</h3>
           <div class="project-card-location">Cloud Infrastructure &mdash; Global</div>
         </div>
-        <div class="project-card reveal reveal-delay-3">
+        <div class="project-card reveal reveal-delay-5">
           <div class="project-card-date">Jun 2012</div>
           <h3>Sony Pictures Networks BroadView</h3>
           <div class="project-card-location">India &mdash; Multi-Channel Deployment</div>
         </div>
       </div>
 
-      <div class="solutions-title reveal">18 Technical Solutions Built</div>
+      <div class="solutions-title reveal">18 Technical Solutions &mdash; Designed, Architected &amp; Implemented</div>
       <div class="solutions-grid reveal">
         <span class="solution-chip">Broadcast Scheduling &amp; Traffic Software</span>
         <span class="solution-chip">TRAI Violation Reporting</span>
@@ -1778,6 +1812,75 @@ body::before {
 </section>
 
 <!-- ═══════════════════════════════════════════
+     CASE STUDIES
+     ═══════════════════════════════════════════ -->
+<section class="section" id="casestudies">
+  <div class="editorial-grid">
+    <div class="section-label">
+      <div class="label-line"></div>
+      Case<br>Studies
+    </div>
+    <div>
+      <h2 class="impl-headline reveal">How the work gets done</h2>
+      <div class="case-study reveal">
+        <div class="case-meta">SABC &middot; Johannesburg &middot; Go-Live Dec 2024</div>
+        <h3 class="case-title">Migrating a national broadcaster to BroadView &mdash; without going off air</h3>
+        <div class="case-grid">
+          <div>
+            <div class="case-label">Challenge</div>
+            <p>The South African Broadcasting Corporation needed its channels moved onto the BroadView BMS &mdash; scheduling, traffic, and ad sales &mdash; while daily broadcast operations continued uninterrupted.</p>
+          </div>
+          <div>
+            <div class="case-label">Approach</div>
+            <p>As senior SME and project lead in Johannesburg, I ran the end-to-end channel migration: planning, configuration, data migration, UAT, and cutover, working hands-on with SABC's operational teams.</p>
+          </div>
+          <div>
+            <div class="case-label">Result</div>
+            <p>Go-live in December 2024, with the national broadcaster's channels scheduled, trafficked, and monetized on BroadView.</p>
+          </div>
+        </div>
+      </div>
+      <div class="case-study reveal reveal-delay-1">
+        <div class="case-meta">Sony Pictures Networks &middot; BroadView on AWS &middot; Feb 2023</div>
+        <h3 class="case-title">Lifting a mission-critical BMS estate into AWS</h3>
+        <div class="case-grid">
+          <div>
+            <div class="case-label">Challenge</div>
+            <p>Hosted on-premise infrastructure was constraining uptime, disaster recovery, and access for globally distributed teams.</p>
+          </div>
+          <div>
+            <div class="case-label">Approach</div>
+            <p>Led the migration of the BroadView platform to AWS &mdash; re-architecting hosting and HA/DR, opening secure global access, and shifting infrastructure spend from CAPEX to OPEX.</p>
+          </div>
+          <div>
+            <div class="case-label">Result</div>
+            <p>Improved uptime and disaster recovery for mission-critical broadcast systems, and a cloud foundation central to the ~40% operational cost reduction achieved across automation and cloud initiatives.</p>
+          </div>
+        </div>
+      </div>
+      <div class="case-study reveal reveal-delay-2">
+        <div class="case-meta">Client Services &middot; 2023&ndash;24</div>
+        <h3 class="case-title">Rebuilding client support around AI</h3>
+        <div class="case-grid">
+          <div>
+            <div class="case-label">Challenge</div>
+            <p>Routine support queries were consuming specialist engineering time and slowing response for broadcast clients operating around the clock.</p>
+          </div>
+          <div>
+            <div class="case-label">Approach</div>
+            <p>Rolled out AI-assisted support workflows and a support chatbot, and launched a self-service client portal with AI-driven search for common issues.</p>
+          </div>
+          <div>
+            <div class="case-label">Result</div>
+            <p>Response speed improved by about 30%, manual escalations fell, and clients now resolve routine issues without raising a ticket.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
      TECHNICAL SKILLS (DARK)
      ═══════════════════════════════════════════ -->
 <div class="section-dark" id="skills">
@@ -1793,6 +1896,7 @@ body::before {
           <span class="skill-tag">BMS</span>
           <span class="skill-tag">RMS</span>
           <span class="skill-tag">BroadView</span>
+          <span class="skill-tag">RightsU</span>
           <span class="skill-tag">EPG</span>
           <span class="skill-tag">SSAI / CSAI</span>
           <span class="skill-tag">SCTE-35</span>
@@ -1838,6 +1942,9 @@ body::before {
           <span class="skill-tag">Firebird</span>
           <span class="skill-tag">PowerShell</span>
           <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">Shell Scripting</span>
+          <span class="skill-tag">XML / JSON</span>
+          <span class="skill-tag">Database Migration</span>
         </div>
       </div>
       <div class="skill-group reveal reveal-delay-4">
@@ -1987,43 +2094,6 @@ body::before {
   updateClock();
   setInterval(updateClock, 1000);
 
-  /* ─── CUSTOM CURSOR ─── */
-  var dot = document.getElementById('cursorDot');
-  var ring = document.getElementById('cursorRing');
-  var mouseX = 0, mouseY = 0;
-  var ringX = 0, ringY = 0;
-
-  document.addEventListener('mousemove', function(e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if (dot) {
-      dot.style.left = mouseX + 'px';
-      dot.style.top = mouseY + 'px';
-    }
-  });
-
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.15;
-    ringY += (mouseY - ringY) * 0.15;
-    if (ring) {
-      ring.style.left = ringX + 'px';
-      ring.style.top = ringY + 'px';
-    }
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  // Hover effect on interactive elements
-  var interactiveEls = document.querySelectorAll('a, button, .expertise-card, .project-card, .impl-card, .contact-card, .skill-group, .solution-chip, .edu-item');
-  interactiveEls.forEach(function(el) {
-    el.addEventListener('mouseenter', function() {
-      if (ring) ring.classList.add('hovering');
-    });
-    el.addEventListener('mouseleave', function() {
-      if (ring) ring.classList.remove('hovering');
-    });
-  });
-
   /* ─── NAVIGATION: auto-hide on scroll ─── */
   var nav = document.getElementById('mainNav');
   var lastScrollY = 0;
@@ -2161,9 +2231,9 @@ body::before {
   var roleChip = document.getElementById('heroRoleChip');
   var roles = [
     'Broadcast Management Systems',
-    'Rights Management (RMS)',
-    'ERP Integration & SAP',
     'AdTech & OTT Platforms',
+    'Rights Management (RightsU)',
+    'ERP Integration & SAP',
     'AI Workflow Automation',
     'Global BMS Deployments',
     'Project & Delivery Management'
