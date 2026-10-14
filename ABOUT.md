@@ -1,6 +1,31 @@
-# v6-b: v6 with photos on the toolkit cards
+# v6-c: v6-b that fits every device
 
-v6-b is a copy of v6 with one change: the toolkit cards have photos. v6 itself was not edited. Open `index.html` in Chrome to see it.
+v6-c is a copy of v6-b, adjusted so the page fits every screen it's opened on. v6-b itself was not edited. Open `index.html` in Chrome to see it.
+
+## What's new in v6-c
+
+Tested on 17 screen sizes: a foldable phone, small and large phones, phones held sideways, iPad mini / Air / Pro in both orientations, small laptops, a 1920px monitor and a 2560px monitor.
+
+| Device | What was wrong | Fixed by |
+|--------|----------------|----------|
+| Small phones and foldables | Toolkit card text ran off the bottom of the card | Cards take their height from the screen and use slightly smaller text on narrow phones |
+| Phones held sideways | Card deck, globe list and contact panel didn't fit the short screen | Those sections switch to a normal stacked layout when the screen is short and wide; rotating back restores the scroll scenes |
+| Small phones | Contact panel cut off at the bottom | Headline and spacing scale with screen height |
+| Big monitors (1920px and up) | Page looked small in the middle of the screen | Everything scales up gently, about 37% larger at 2560px |
+
+After the fixes, on all 17 sizes:
+- no sideways scrolling
+- nothing cut off
+- every button big enough to tap
+- no errors
+
+Smoothness is the same as v6-b.
+
+---
+
+# Earlier: v6-b, v6 with photos on the toolkit cards
+
+v6-b is a copy of v6 with one change: the toolkit cards have photos. v6 itself was not edited.
 
 ## What's new in v6-b
 

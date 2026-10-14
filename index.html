@@ -120,6 +120,7 @@
 /* ============ Base ============ */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 1rem); -webkit-text-size-adjust: 100%; }
+@media (min-width: 1600px) { html { font-size: clamp(100%, calc(100% + (100vw - 1600px) * .00625), 150%); } }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
   font-family: var(--font); font-size: 1.0625rem; line-height: 1.6;
@@ -517,8 +518,8 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
 .orb-intro h2 { font-weight: 650; font-variation-settings: "wdth" 100; font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -.035em; line-height: 1; }
 .orb-intro p { color: var(--ink-2); }
 .orb { position: absolute; left: 50%; top: 58%; width: 26vmin; height: 26vmin; margin: -13vmin 0 0 -13vmin; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #FFB000, #FF3B2F 35%, #E0218A 65%, #1B2BD9); will-change: transform; }
-.contact-panel { position: relative; z-index: 2; color: #fff; text-align: center; display: grid; gap: 1.75rem; justify-items: center; padding: var(--nav-h) var(--gutter) 0; opacity: 0; text-shadow: 0 1px 2px rgba(110, 10, 20, .35); }
-.contact-panel h2 { font-weight: 650; font-variation-settings: "wdth" 100; font-size: clamp(2.75rem, 7vw, 6.5rem); letter-spacing: -.04em; line-height: .95; max-width: 14ch; text-wrap: wrap; } /* balance would split "go-live" */
+.contact-panel { position: relative; z-index: 2; color: #fff; text-align: center; display: grid; gap: clamp(1rem, 3.2vh, 1.75rem); justify-items: center; padding: var(--nav-h) var(--gutter) 0; opacity: 0; text-shadow: 0 1px 2px rgba(110, 10, 20, .35); }
+.contact-panel h2 { font-weight: 650; font-variation-settings: "wdth" 100; font-size: clamp(2rem, min(7vw, 9vh), 6.5rem); letter-spacing: -.04em; line-height: .95; max-width: 14ch; text-wrap: wrap; } /* balance would split "go-live" */
 .contact-panel > p { font-size: 1.1875rem; max-width: 34rem; }
 .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 .contact-panel .btn { border-color: #fff; color: #fff; text-shadow: none; }
@@ -543,6 +544,47 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
   /* Reading text no smaller than 16px on phones */
   .status, .figures dt, .site-footer, .solutions li, .slide-meta { font-size: 1rem; }
 }
+
+/* ============ Small phones: the deck takes its height from the screen, text a touch smaller ============ */
+@media (max-width: 480px) {
+  #toolkit .stage { padding-top: calc(var(--nav-h) + 1.25rem); }
+  .toolkit-head h2 { font-size: 2.5rem; }
+  .toolkit-head p { font-size: 1rem; }
+  .deck { width: min(20rem, 86vw); aspect-ratio: auto; height: min(30rem, calc(100svh - var(--nav-h) - 10.5rem)); margin-bottom: 2.75rem; }
+  .card { padding: 1.125rem 1.125rem 1.25rem; border-radius: 18px; }
+  .card h3 { font-size: 1.375rem; }
+  .card ul { gap: .3125rem; margin-top: .75rem; }
+  .card li { font-size: .75rem; padding: .1875rem .5rem; }
+  .card-art { min-height: 0; margin: .75rem 0; }
+  .card.creds ul { gap: .375rem; }
+  .card.creds li { padding-top: .375rem; font-size: .8125rem; }
+  .card.creds li strong { font-size: .875rem; }
+  .deck-hint { bottom: .75rem; }
+  .contact-panel > p { font-size: 1rem; }
+}
+@media (max-width: 340px) {
+  .card h3 { font-size: 1.1875rem; }
+  .card li { font-size: .6875rem; }
+  .card-top { font-size: .75rem; }
+}
+
+/* ============ Short screens (phones held sideways): scroll scenes that need a tall screen become normal stacked sections ============ */
+html.static-stories #reach, html.static-stories #toolkit, html.static-stories #contact { height: auto; }
+html.static-stories #reach .stage, html.static-stories #toolkit .stage, html.static-stories #contact .stage { position: relative; height: auto; overflow: visible; }
+html.static-stories #reach .stage { padding-block: calc(var(--nav-h) + 1.5rem) 3rem; }
+html.static-stories .region { display: block !important; }
+html.static-stories .region h3, html.static-stories .region h3 span { color: inherit; }
+html.static-stories .region p { max-height: none; margin-top: .375rem; }
+html.static-stories .globe-wrap { height: min(70vh, 26rem); }
+html.static-stories #toolkit .stage { padding: calc(var(--nav-h) + 2rem) var(--gutter) 4rem; grid-template-columns: minmax(0, 1fr); }
+html.static-stories .deck { width: 100%; max-width: 64rem; height: auto; aspect-ratio: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 1rem; margin: 2rem 0 0; }
+html.static-stories .card { position: relative; min-height: 24rem; transform: none !important; opacity: 1 !important; }
+html.static-stories .deck-hint { display: none; }
+html.static-stories #contact .stage { padding: calc(var(--nav-h) + 1rem) var(--gutter) 4rem; display: grid; gap: 1.5rem; }
+html.static-stories .orb-intro { position: static; padding: 0; opacity: 1 !important; }
+html.static-stories .orb { display: none; }
+html.static-stories .contact-panel { opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: clamp(2rem, 6vw, 4rem) var(--gutter); border-radius: 22px; max-width: 64rem; width: 100%; margin-inline: auto; background: radial-gradient(120% 140% at 85% 0%, #FFB000, #FF3B2F 38%, #E0218A 72%, #7A2AD0); }
+html.static-stories .contact-panel h2 { font-size: clamp(2rem, 6vw, 3.5rem); }
 
 /* ============ Reduced motion: everything static, complete and readable ============ */
 @media (prefers-reduced-motion: reduce) {
@@ -944,6 +986,10 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.__reduceMotion = reduce;
   var root = document.documentElement;
+  /* Phones held sideways are too short for the full-screen scroll scenes: show those sections stacked instead */
+  var shortMQ = window.matchMedia('(max-height: 540px) and (orientation: landscape)');
+  function isStatic() { return root.classList.contains('static-stories'); }
+  root.classList.toggle('static-stories', shortMQ.matches);
   function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
   function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function progressOf(el) {
@@ -1020,7 +1066,7 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
     if (!a || a.getAttribute('href').length < 2) return;
     var t = document.getElementById(a.getAttribute('href').slice(1));
     if (!t) return;
-    if (t.id === 'contact' && !reduce) {
+    if (t.id === 'contact' && !reduce && !isStatic()) {
       e.preventDefault();
       window.scrollTo({ top: t.getBoundingClientRect().top + scrollY + (t.offsetHeight - innerHeight) * .9, behavior: 'smooth' });
       history.replaceState(null, '', '#contact');
@@ -1163,7 +1209,8 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
     queued = false;
     var vw = innerWidth, vh = innerHeight;
     var pm = progressOf(manifesto), pj = progressOf(journey), pr = progressOf(reach), pt = progressOf(toolkit), pc = progressOf(contact);
-    var onM = near(manifesto, vh), onT = near(toolkit, vh), onC = near(contact, vh);
+    var st = isStatic();
+    var onM = near(manifesto, vh), onT = !st && near(toolkit, vh), onC = !st && near(contact, vh);
 
     /* kinetic line: slides left, letters tumble in from the right edge */
     if (onM) {
@@ -1226,9 +1273,20 @@ a, button, summary { touch-action: manipulation; -webkit-tap-highlight-color: tr
   /* a pinned section is "near" from one screen before it until one screen after it */
   function near(el, vh) { var r = el.getBoundingClientRect(); return r.bottom > -vh && r.top < vh * 2; }
 
+  /* Rotating between portrait and landscape switches the scroll scenes on or off; clear what the scenes had set */
+  shortMQ.addEventListener('change', function (m) {
+    root.classList.toggle('static-stories', m.matches);
+    if (m.matches) {
+      cards.forEach(function (c) { c.style.transform = ''; c.style.opacity = ''; c.style.zIndex = ''; });
+      [orb, orbIntro, panel].forEach(function (el) { el.style.transform = ''; el.style.opacity = ''; el.style.pointerEvents = ''; });
+    }
+    lastRegion = -1;
+    request();
+  });
+
   /* Keyboard users tabbing into the contact panel are taken to where it is fully shown */
   panel.addEventListener('focusin', function () {
-    if (progressOf(contact) < .85) {
+    if (!isStatic() && progressOf(contact) < .85) {
       window.scrollTo({ top: contact.getBoundingClientRect().top + scrollY + (contact.offsetHeight - innerHeight) * .9, behavior: 'instant' });
     }
   });
