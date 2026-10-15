@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+  /* Phones get the phone edition (mobile.html). The check uses the real screen size and touch input,
+     not the browser's name, so it still works when a phone browser is in "desktop site" mode.
+     iPads and computers stay here. "View the full site" on the phone page sets ?full=1 to stay. */
+  (function () {
+    try {
+      if (/[?&]full=1/.test(location.search)) { sessionStorage.setItem('km-full', '1'); return; }
+      if (sessionStorage.getItem('km-full') === '1') return;
+    } catch (e) {}
+    try {
+      var touch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+      var shortSide = Math.min(screen.width, screen.height);
+      var uaMobile = /Android.+Mobile|iPhone|iPod|Windows Phone|Mobi/i.test(navigator.userAgent) || !!(navigator.userAgentData && navigator.userAgentData.mobile);
+      if (touch && (shortSide < 600 || (uaMobile && shortSide < 700))) location.replace('mobile.html' + location.hash);
+    } catch (e) {}
+  })();
+</script>
 <!-- Google Analytics (kept from the original site) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8XKXJR31YP"></script>
 <script>

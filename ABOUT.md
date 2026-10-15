@@ -1,6 +1,36 @@
-# v6-c: v6-b that fits every device
+# v6-d: a dedicated phone edition
 
-v6-c is a copy of v6-b, adjusted so the page fits every screen it's opened on. v6-b itself was not edited. Open `index.html` in Chrome to see it.
+v6-d is a copy of v6-c with a separate page built for phones. v6-c itself was not edited.
+
+## How it works
+
+| Device | What it gets |
+|--------|--------------|
+| Phone (any browser, including Edge or Chrome in "desktop site" mode) | `mobile.html`, the phone edition |
+| iPad / tablet | `index.html`, the full site |
+| Laptop / desktop | `index.html`, the full site |
+
+- **Spotting a phone:** the main page (`index.html`) checks the device's real screen size and touch screen. It doesn't rely on the browser's name, which changes in desktop-site mode. A phone is sent straight to `mobile.html`.
+- **Phone edition:** a single column with a big photo, big text, full-width buttons, a schedule that builds as you scroll, journey cards, a globe that turns to each country, the track record as easy-to-read cards, a **swipeable** toolkit deck, and the "What's next?" orb finale.
+- **Desktop-site mode:** the phone edition sizes everything as a share of the screen width. Even if the browser forces a computer-sized layout, text and photos stay big. Body text measured 17.5px on screen in both modes.
+- **Phone held sideways:** the photo and headline sit side by side and nothing is cut off.
+- **Full site from a phone:** "View the full site" (menu and footer) opens the full site and stays there for that visit.
+- **A computer opening `mobile.html`** (a shared link) is sent to the full site.
+- **Google Analytics:** both pages use the same tracker (G-8XKXJR31YP).
+
+## Publishing
+
+Upload **all** of these to the GitHub repository, next to each other:
+- `index.html`
+- `mobile.html`
+- the `toolkit` folder
+- `profile.webp`, `profile.png`, `favicon.svg` and `og-image.png`
+
+---
+
+# Earlier: v6-c, v6-b that fits every device
+
+v6-c is a copy of v6-b, adjusted so the page fits every screen it's opened on.
 
 ## What's new in v6-c
 
