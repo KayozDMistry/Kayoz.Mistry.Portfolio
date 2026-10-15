@@ -39,6 +39,13 @@
 <link rel="preload" as="image" href="profile.webp" type="image/webp" fetchpriority="high">
 <script>
   try { var t = localStorage.getItem('km-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  /* Scroll scenes need a tall screen and motion. With reduced motion, or a phone held sideways,
+     the same content is shown as simple stacked sections ("static" mode). */
+  (function () {
+    var r = document.documentElement;
+    var still = matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(orientation: landscape) and (max-height: 540px)').matches;
+    r.classList.toggle('static', still);
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,11 +64,11 @@ html { font-size: max(14.5px, calc(min(100vw, 110vh) / 25)); } /* 16px on a 400p
 :root {
   --paper: #ECEEF0; --paper-2: #E0E3E7; --ink: #14171C; --ink-2: #4A515B;
   --line: rgba(20, 23, 28, .14); --surface: #FFFFFF;
-  --tally: #FF3B2F; --tally-fill: #FF3B2F; --tally-text: #C0221B; --tally-ink: #FFFFFF;
+  --tally: #FF3B2F; --tally-fill: #FF3B2F; --tally-text: #C0221B;
   --night: #0F1116; --night-ink: #E9EBEE; --night-ink-2: #A3AAB4; --night-line: rgba(233, 235, 238, .14);
   --bar-1: #BFBFBF; --bar-2: #BFBF00; --bar-3: #00BFBF; --bar-4: #00BF00; --bar-5: #BF00BF; --bar-6: #BF0000; --bar-7: #0000BF;
   --font: "Archivo", system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif; --mono: "JetBrains Mono", ui-monospace, monospace;
-  --pad: 1.25rem; --nav-h: 3.5rem; --ease: cubic-bezier(.22, 1, .36, 1);
+  --pad: 1.25rem; --nav-h: 3.5rem; --top: calc(var(--nav-h) + env(safe-area-inset-top, 0px)); --ease: cubic-bezier(.22, 1, .36, 1);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -70,7 +77,7 @@ html { font-size: max(14.5px, calc(min(100vw, 110vh) / 25)); } /* 16px on a 400p
 :root[data-theme="dark"] { --paper: #101318; --paper-2: #181C23; --ink: #E9EBEE; --ink-2: #A3AAB4; --line: rgba(233, 235, 238, .14); --surface: #1B2028; --tally-text: #FF6A60; color-scheme: dark; }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + .75rem); }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--top) + .75rem); }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 1rem; line-height: 1.55; overflow-x: clip; -webkit-font-smoothing: antialiased; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
@@ -83,7 +90,6 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .mono { font-family: var(--mono); font-size: .8125rem; font-variant-numeric: tabular-nums; }
 .wrap { padding-inline: var(--pad); max-width: 44rem; margin-inline: auto; }
-.slide { max-width: 44rem; margin-inline: auto; }
 .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 300; background: var(--ink); color: var(--paper); padding: .75rem 1rem; border-radius: .5rem; text-decoration: none; }
 .skip-link:focus { top: 1rem; }
 .eyebrow { color: var(--tally-text); }
@@ -93,6 +99,13 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .lede { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.55; }
 .section { padding-block: 4rem; }
 .section-head { display: grid; gap: .875rem; margin-bottom: 2rem; }
+.nowrap { white-space: nowrap; }
+
+/* Scroll scenes: a tall section with a full-screen stage that stays put while you scroll through it */
+.pin { position: relative; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.night { background: var(--night); color: var(--night-ink); }
+.night :focus-visible { outline-color: var(--tally); }
 
 /* ---------- buttons ---------- */
 .btn { display: flex; align-items: center; justify-content: center; gap: .625rem; min-height: 3.25rem; padding: 0 1.5rem; border-radius: 999rem; font: 650 1.0625rem/1 var(--font); text-decoration: none; border: .09375rem solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
@@ -103,8 +116,8 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .icon-btn svg { width: 1.125rem; height: 1.125rem; }
 
 /* ---------- top bar ---------- */
-.nav { position: fixed; inset: 0 0 auto 0; z-index: 100; height: calc(var(--nav-h) + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(.75rem); -webkit-backdrop-filter: blur(.75rem); border-bottom: 1px solid var(--line); }
-.nav .wrap { height: var(--nav-h); display: flex; align-items: center; gap: .625rem; }
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 100; height: var(--top); padding-top: env(safe-area-inset-top, 0px); background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(.75rem); -webkit-backdrop-filter: blur(.75rem); border-bottom: 1px solid var(--line); }
+.nav .wrap { height: var(--nav-h); display: flex; align-items: center; gap: .625rem; max-width: none; }
 .brand { font-weight: 850; font-variation-settings: "wdth" 70; font-size: 1.375rem; text-decoration: none; min-width: 2.75rem; min-height: 2.75rem; display: inline-flex; align-items: center; }
 .timecode { display: flex; align-items: center; gap: .4375rem; color: var(--ink-2); white-space: nowrap; font-size: .75rem; }
 .on-air { display: inline-flex; align-items: center; gap: .3125rem; padding: .1875rem .4375rem; border-radius: .25rem; background: var(--tally-fill); color: #fff; font: 700 .6875rem/1.2 var(--font); letter-spacing: .04em; }
@@ -116,7 +129,7 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 :root[data-theme="dark"] .theme-toggle .moon { display: block; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme-toggle .sun { display: none; } :root:not([data-theme="light"]) .theme-toggle .moon { display: block; } }
 .menu-toggle { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.menu { position: fixed; inset: 0; z-index: 150; background: var(--paper); display: flex; flex-direction: column; padding: calc(var(--nav-h) + 1.5rem) var(--pad) 2rem; overflow-y: auto; visibility: hidden; opacity: 0; transition: opacity .16s ease-in, visibility .16s; }
+.menu { position: fixed; inset: 0; z-index: 150; background: var(--paper); display: flex; flex-direction: column; padding: calc(var(--top) + 1.5rem) var(--pad) 2rem; overflow-y: auto; visibility: hidden; opacity: 0; transition: opacity .16s ease-in, visibility .16s; }
 .menu.open { visibility: visible; opacity: 1; transition: opacity .25s var(--ease), visibility 0s; }
 .menu-close { position: absolute; top: calc(.375rem + env(safe-area-inset-top, 0px)); right: var(--pad); }
 .menu ol a { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: .875rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
@@ -126,11 +139,12 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .menu-foot a { color: var(--ink); min-height: 2.75rem; display: inline-flex; align-items: center; justify-self: start; }
 
 /* ---------- 1. landing ---------- */
-.hero { padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 1.25rem); }
+.hero { padding-top: calc(var(--top) + 1.25rem); }
 .monitor { position: relative; margin: 0; aspect-ratio: 1 / 1.02; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(160deg, var(--paper-2), var(--surface)); }
 .monitor img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
 .monitor::after { content: ""; position: absolute; inset: 6%; border: 1px dashed rgba(255,255,255,.55); border-radius: .25rem; mix-blend-mode: difference; pointer-events: none; }
-.lower-third { position: absolute; left: 6%; right: 6%; bottom: 8%; z-index: 1; display: grid; grid-template-columns: .375rem 1fr; }
+.lower-third { position: absolute; left: 6%; right: 6%; bottom: 8%; z-index: 1; display: grid; grid-template-columns: .375rem 1fr; clip-path: inset(0 100% 0 0); animation: lt-in .6s var(--ease) .4s forwards; }
+@keyframes lt-in { to { clip-path: inset(0 0 0 0); } }
 .lower-third::before { content: ""; background: var(--tally); grid-row: span 2; }
 .lt-name { background: #14171C; color: #fff; padding: .5rem .875rem .375rem; font-weight: 850; font-variation-settings: "wdth" 70; font-size: 1.75rem; line-height: 1; }
 .lt-role { background: #fff; color: #14171C; padding: .375rem .875rem; font-size: .875rem; font-weight: 550; line-height: 1.3; }
@@ -157,20 +171,18 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .crawl.is-ready .crawl-track { animation: crawl 60s linear infinite; }
 .crawl.is-paused .crawl-track { animation-play-state: paused; }
 @keyframes crawl { to { transform: translateX(-50%); } }
-.lower-third { clip-path: inset(0 100% 0 0); animation: lt-in .6s var(--ease) .4s forwards; }
-@keyframes lt-in { to { clip-path: inset(0 0 0 0); } }
 
-/* ---------- 2. kinetic line ---------- */
-.kinetic { padding-block: 5rem 3.5rem; overflow: hidden; }
-.kinetic p { font-weight: 650; font-variation-settings: "wdth" 104; font-size: 3.625rem; line-height: .98; letter-spacing: -.045em; }
-.kinetic .w { display: inline-block; white-space: nowrap; }
-.kinetic .l { display: inline-block; opacity: 0; transform: translate3d(0, -1.4em, 0) rotate(var(--r)); transition: transform .9s var(--ease), opacity .5s; transition-delay: calc(var(--i) * 28ms); }
-.kinetic.in .l { opacity: 1; transform: none; }
-.kinetic .accent { color: var(--tally); }
+/* ---------- 2. kinetic line (as on desktop: slides in, letters tumble into place) ---------- */
+#manifesto { height: 300vh; }
+#manifesto .stage { display: flex; align-items: center; }
+.k-track { display: flex; white-space: nowrap; will-change: transform; font-weight: 650; font-variation-settings: "wdth" 104; font-size: 6.75rem; letter-spacing: -.045em; line-height: 1; padding-left: 100vw; }
+.k-track span[aria-hidden] { display: inline-block; will-change: transform; }
+.k-track .accent { color: var(--tally); }
 
-/* ---------- 3. how I work ---------- */
-.build-visual { position: sticky; top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + .5rem); z-index: 2; padding-bottom: 1rem; background: linear-gradient(var(--paper) 88%, transparent); }
-.schedule { background: var(--surface); border: 1px solid var(--line); border-radius: .875rem; overflow: hidden; box-shadow: 0 1.5rem 3rem -2rem rgba(0,0,0,.35); }
+/* ---------- 3. how I work: the schedule holds still, the step text changes beneath it ---------- */
+#howPin { height: 480vh; }
+#howPin .stage { display: flex; flex-direction: column; padding: calc(var(--top) + 1rem) var(--pad) 1.5rem; max-width: 44rem; margin-inline: auto; }
+.schedule { background: var(--surface); border: 1px solid var(--line); border-radius: .875rem; overflow: hidden; box-shadow: 0 1.5rem 3rem -2rem rgba(0,0,0,.35); flex: none; }
 .sch-head { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: .625rem .875rem; border-bottom: 1px solid var(--line); }
 .sch-head strong { font-variation-settings: "wdth" 80; font-size: .9375rem; white-space: nowrap; }
 .sch-flag { font-size: .6875rem; font-weight: 650; padding: .1875rem .4375rem; border-radius: .25rem; background: var(--paper-2); color: var(--ink-2); opacity: 0; transition: opacity .3s; white-space: nowrap; }
@@ -196,44 +208,51 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .schedule:is([data-step="7"],[data-step="8"]) .sch-row.is-live .sch-check { display: none; }
 .schedule[data-step="8"] .sch-foot .pre-live { display: none; }
 .schedule[data-step="8"] .sch-foot .post-live { display: inline; }
-.steps li { min-height: 52vh; display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding-block: 1.5rem; }
-.steps li:last-child { min-height: 38vh; }
-.steps .step-no { color: var(--tally-text); }
-.steps p { color: var(--ink-2); }
-.steps li > * { transition: color .3s; }
-.steps li:not(.active) h3 { color: color-mix(in srgb, var(--ink) 55%, var(--paper)); }
-.steps li:not(.active) p, .steps li:not(.active) .step-no { color: color-mix(in srgb, var(--ink-2) 75%, var(--paper)); }
+.step-meter { display: grid; grid-template-columns: repeat(8, 1fr); gap: .25rem; margin: 1.25rem 0 .25rem; flex: none; }
+.step-meter i { height: .25rem; border-radius: 999rem; background: var(--line); transition: background-color .3s; }
+.step-meter i.on { background: var(--tally); }
+.step-view { position: relative; flex: 1; min-height: 0; }
+.step { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: .5rem; opacity: 0; transform: translateY(1.25rem); transition: opacity .4s, transform .5s var(--ease); }
+.step.active { opacity: 1; transform: none; }
+.step.past { transform: translateY(-1.25rem); }
+.step .step-no { color: var(--tally-text); }
+.step p { color: var(--ink-2); }
 
-/* ---------- dark studio sections ---------- */
-.night { background: var(--night); color: var(--night-ink); }
-.night .lede, .night .muted { color: var(--night-ink-2); }
-.night :focus-visible { outline-color: var(--tally); }
-
-/* ---------- 4. journey ---------- */
-.journey-intro { color: var(--night-ink-2); font-weight: 600; font-size: .9375rem; text-align: center; padding-top: 3.5rem; }
-.slide { min-height: 78vh; display: grid; place-content: center; justify-items: center; text-align: center; gap: 1.125rem; padding: 2.5rem var(--pad); }
+/* ---------- 4. journey (as on desktop: one word at a time) ---------- */
+#journey { height: 480vh; }
+#journey .stage { display: grid; place-items: center; }
+.journey-intro { position: absolute; top: calc(var(--top) + 1.25rem); left: 0; right: 0; text-align: center; color: var(--night-ink-2); font-weight: 600; font-size: .9375rem; padding-inline: var(--pad); }
+.slide { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; gap: 1.125rem; padding: 5rem var(--pad) 3rem; max-width: 44rem; margin-inline: auto; pointer-events: none; }
 .slide-word { font-weight: 650; font-size: 5.25rem; line-height: .95; letter-spacing: -.045em; overflow: hidden; padding-bottom: .08em; }
 .slide-word span[aria-hidden] { display: inline-block; transform: translateY(110%); transition: transform .8s var(--ease); transition-delay: calc(var(--i) * 40ms); }
-.slide-line { font-family: var(--serif); font-style: italic; font-size: 2rem; line-height: 1.12; opacity: 0; transform: translateY(1rem); transition: opacity .6s .2s, transform .6s var(--ease) .2s; }
-.slide-meta { color: var(--night-ink-2); opacity: 0; transition: opacity .6s .35s; }
+.slide-line { font-family: var(--serif); font-style: italic; font-size: 2rem; line-height: 1.12; opacity: 0; transform: translateY(1rem); transition: opacity .6s, transform .6s var(--ease); transition-delay: .2s; }
+.slide-meta { color: var(--night-ink-2); opacity: 0; transition: opacity .6s; transition-delay: .35s; }
 .slide-meta strong { color: var(--night-ink); font-weight: 650; }
-.slide.in .slide-word span[aria-hidden] { transform: none; }
-.slide.in .slide-line { opacity: 1; transform: none; }
-.slide.in .slide-meta { opacity: 1; }
+.slide.active .slide-word span[aria-hidden] { transform: none; }
+.slide.active .slide-line { opacity: 1; transform: none; }
+.slide.active .slide-meta { opacity: 1; }
+.slide.past .slide-word span[aria-hidden] { transform: translateY(-110%); }
+.journey-dots { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: .5rem; }
+.journey-dots i { width: .5rem; height: .5rem; border-radius: 999rem; background: var(--night-line); transition: width .3s var(--ease), background-color .3s; }
+.journey-dots i.on { width: 1.75rem; background: var(--tally); }
 
-/* ---------- 5. reach ---------- */
-.reach-head { padding-top: 4rem; }
-.reach-head h2 { margin-bottom: .75rem; }
-.globe-sticky { position: sticky; top: calc(var(--nav-h) + env(safe-area-inset-top, 0px)); z-index: 1; background: linear-gradient(var(--night) 85%, transparent); padding-bottom: .5rem; }
-.globe-wrap { position: relative; width: 100%; height: min(86vw, 55vh); }
+/* ---------- 5. reach: globe holds still, the country changes beneath it ---------- */
+#reach { height: 420vh; }
+#reach .stage { display: flex; flex-direction: column; padding: calc(var(--top) + 1rem) var(--pad) 1.25rem; max-width: 44rem; margin-inline: auto; }
+#reach h2 { flex: none; }
+.globe-wrap { position: relative; flex: none; width: 100%; height: min(86vw, 38vh); margin: .5rem 0; }
 .globe-wrap canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
-.regions { padding-bottom: 3rem; }
-.region { min-height: 34vh; display: flex; flex-direction: column; justify-content: center; border-top: 1px solid var(--night-line); padding-block: 1.25rem; }
-.region h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-weight: 700; font-variation-settings: "wdth" 92; font-size: 1.5rem; transition: color .3s; }
+.region-tabs { display: flex; flex-wrap: nowrap; gap: .375rem; flex: none; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+.region-tabs::-webkit-scrollbar { display: none; }
+.region-tabs button { flex: none; white-space: nowrap; }
+.region-tabs button { min-height: 2.75rem; padding: 0 .875rem; border-radius: 999rem; border: 1px solid var(--night-line); background: transparent; color: var(--night-ink-2); font-size: .875rem; font-weight: 600; cursor: pointer; transition: background-color .3s, color .3s, border-color .3s; }
+.region-tabs button[aria-current="true"] { background: var(--night-ink); color: var(--night); border-color: var(--night-ink); }
+.regions { position: relative; flex: 1; min-height: 0; margin-top: .75rem; }
+.region { position: absolute; inset: 0; opacity: 0; transform: translateY(1rem); transition: opacity .4s, transform .5s var(--ease); }
+.region.active { opacity: 1; transform: none; }
+.region h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-weight: 700; font-variation-settings: "wdth" 92; font-size: 1.625rem; }
 .region h3 span { font-family: var(--mono); font-weight: 400; font-size: .8125rem; color: var(--night-ink-2); }
-.region p { color: var(--night-ink-2); margin-top: .5rem; transition: color .3s; }
-.region:not(.active) h3 { color: #858B99; }
-.region:not(.active) p { color: #7E8492; }
+.region p { color: var(--night-ink-2); margin-top: .5rem; }
 
 /* ---------- 6. track record ---------- */
 .figures { display: grid; grid-template-columns: 1fr 1fr; border-block: 1px solid var(--line); }
@@ -265,33 +284,30 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .solutions ul { display: flex; flex-wrap: wrap; gap: .5rem; }
 .solutions li { border: 1px solid var(--line); border-radius: 999rem; padding: .375rem .875rem; font-size: .9375rem; font-weight: 550; }
 
-/* ---------- 7. toolkit: swipeable deck ---------- */
-.toolkit { padding-block: 4rem 3rem; }
-.toolkit .section-head { text-align: center; justify-items: center; }
-.deck { display: flex; gap: .875rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .75rem max(9%, calc((100% - 24rem) / 2)) 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-.deck::-webkit-scrollbar { display: none; }
-.card { flex: 0 0 min(82%, 24rem); scroll-snap-align: center; height: min(31rem, max(19rem, calc(100svh - 7rem))); border-radius: 1.375rem; padding: 1.25rem; display: flex; flex-direction: column; color: #fff; background: var(--c); box-shadow: 0 1.5rem 3rem -1.5rem rgba(0,0,0,.6); transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: transform .15s linear, opacity .15s linear; }
+/* ---------- 7. toolkit (as on desktop: a 3D deck dealt away as you scroll) ---------- */
+#toolkit { height: 600vh; }
+#toolkit .stage { display: grid; grid-template-rows: auto 1fr; justify-items: center; padding-top: calc(var(--top) + 1.25rem); perspective: 87.5rem; }
+.toolkit-head { text-align: center; display: grid; gap: .375rem; padding-inline: var(--pad); }
+.toolkit-head p { color: var(--night-ink-2); }
+.deck { position: relative; width: 20rem; height: min(30rem, calc(100svh - var(--top) - 10rem)); align-self: center; transform-style: preserve-3d; margin-bottom: 1.5rem; }
+.card { position: absolute; inset: 0; border-radius: 1.25rem; padding: 1.125rem 1.125rem 1.25rem; display: flex; flex-direction: column; color: #fff; background: var(--c); box-shadow: 0 2.5rem 5rem -2.5rem rgba(0,0,0,.6); transform-origin: 50% 100%; will-change: transform, opacity; backface-visibility: hidden; }
 .card.on-light { color: #14171C; }
 .card-top { display: flex; justify-content: space-between; font-size: .8125rem; font-weight: 650; }
-.card-art { position: relative; flex: 1 1 auto; min-height: 4rem; margin: .875rem 0 1rem; border-radius: .875rem; overflow: hidden; background: var(--c); }
+.card-art { position: relative; flex: 1 1 auto; min-height: 0; margin: .75rem 0; border-radius: .875rem; overflow: hidden; background: var(--c); }
 .card-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .card-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.18)); }
-.card h3 { font-weight: 700; font-variation-settings: "wdth" 92; font-size: 1.5rem; line-height: 1.05; letter-spacing: -.02em; }
-.card ul { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .75rem; }
-.card li { background: rgba(255,255,255,.92); color: #14171C; border-radius: 999rem; padding: .25rem .625rem; font-size: .8125rem; font-weight: 600; }
-.card.creds { background: #F4F5F7; color: #14171C; box-shadow: 0 1.5rem 3rem -1.5rem rgba(0,0,0,.6), inset 0 .5rem 0 var(--tally); }
+.card h3 { font-weight: 700; font-variation-settings: "wdth" 92; font-size: 1.4375rem; line-height: 1.05; letter-spacing: -.02em; }
+.card ul { display: flex; flex-wrap: wrap; gap: .3125rem; margin-top: .75rem; }
+.card li { background: rgba(255,255,255,.92); color: #14171C; border-radius: 999rem; padding: .1875rem .5625rem; font-size: .78125rem; font-weight: 600; }
+.card.creds { background: #F4F5F7; color: #14171C; box-shadow: 0 2.5rem 5rem -2.5rem rgba(0,0,0,.6), inset 0 .5rem 0 var(--tally); }
 .card.creds .card-art { background: none; }
 .card.creds .card-art::after { display: none; }
 .card.creds .card-art img { object-fit: contain; }
-.card.creds ul { display: grid; gap: .5rem; }
-.card.creds li { background: none; border-radius: 0; padding: .5rem 0 0; border-top: 1px solid rgba(20,23,28,.14); font-weight: 500; font-size: .875rem; line-height: 1.3; }
-.card.creds li strong { display: block; font-weight: 700; font-size: .9375rem; }
+.card.creds ul { display: grid; gap: .375rem; }
+.card.creds li { background: none; border-radius: 0; padding: .375rem 0 0; border-top: 1px solid rgba(20,23,28,.14); font-weight: 500; font-size: .8125rem; line-height: 1.3; }
+.card.creds li strong { display: block; font-weight: 700; font-size: .875rem; }
 .card.creds li .mono { color: #4A515B; font-size: .75rem; }
-.deck-dots { display: flex; justify-content: center; gap: 0; }
-.deck-dots button { width: 2.25rem; height: 2.75rem; border: 0; background: none; display: grid; place-items: center; cursor: pointer; padding: 0; }
-.deck-dots button::after { content: ""; width: .5rem; height: .5rem; border-radius: 999rem; background: var(--night-line); transition: width .3s var(--ease), background-color .3s; }
-.deck-dots button[aria-current="true"]::after { width: 1.5rem; background: var(--tally); }
-.deck-hint { text-align: center; color: var(--night-ink-2); font-size: .875rem; margin-top: .25rem; }
+.deck-hint { position: absolute; bottom: .875rem; left: 0; right: 0; text-align: center; color: var(--night-ink-2); font-size: .8125rem; }
 
 /* ---------- 8. quote ---------- */
 .quote { margin: 0; }
@@ -299,13 +315,13 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .quote footer { margin-top: 1rem; color: var(--ink-2); }
 
 /* ---------- 9. finale ---------- */
-#contact { height: 260vh; position: relative; }
-#contact .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+#contact { height: 260vh; }
+#contact .stage { display: grid; place-items: center; }
 .orb-intro { position: absolute; top: 24vh; left: 0; right: 0; text-align: center; display: grid; gap: .5rem; z-index: 1; padding-inline: var(--pad); }
 .orb-intro h2 { font-weight: 650; font-size: 2.75rem; letter-spacing: -.035em; line-height: 1; }
 .orb-intro p { color: var(--ink-2); }
 .orb { position: absolute; left: 50%; top: 60%; width: 40vw; height: 40vw; margin: -20vw 0 0 -20vw; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #FFB000, #FF3B2F 35%, #E0218A 65%, #1B2BD9); will-change: transform; }
-.contact-panel { position: relative; z-index: 2; color: #fff; text-align: center; display: grid; gap: 1.25rem; justify-items: center; padding: var(--nav-h) var(--pad) 0; opacity: 0; text-shadow: 0 1px 2px rgba(110,10,20,.35); }
+.contact-panel { position: relative; z-index: 2; color: #fff; text-align: center; display: grid; gap: 1.25rem; justify-items: center; padding: var(--nav-h) var(--pad) 0; opacity: 0; text-shadow: 0 1px 2px rgba(110,10,20,.35); max-width: 44rem; }
 .contact-panel h2 { font-weight: 650; font-size: 2.75rem; letter-spacing: -.04em; line-height: .98; }
 .contact-panel > p { font-size: 1.0625rem; }
 .cta-row { display: grid; gap: .625rem; width: 100%; }
@@ -325,38 +341,49 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .credits summary { min-height: 2.75rem; display: inline-flex; align-items: center; cursor: pointer; }
 .credits ul { display: grid; gap: .375rem; margin: .5rem 0 .75rem; }
 
-/* ---------- phone held sideways: short screen ---------- */
+/* ---------- phone held sideways ---------- */
 @media (orientation: landscape) and (max-height: 540px) {
   .hero .wrap { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 0 1.5rem; align-items: end; }
   .hero .monitor { grid-row: 1; }
   .hero .hero-copy { grid-row: 1; margin-top: 0; }
   .hero .bars, .hero .crawl { grid-column: 1 / -1; }
   .hero-actions { grid-template-columns: 1fr 1fr; }
-  .build-visual, .globe-sticky { position: relative; top: auto; }
-  .steps li, .region { min-height: 0; padding-block: 1.25rem; }
-  .slide { min-height: 0; padding-block: 3rem; }
-  #contact { height: auto; }
-  #contact .stage { position: relative; height: auto; padding: 3rem var(--pad) 4rem; display: grid; gap: 1.5rem; }
-  .orb-intro { position: static; opacity: 1 !important; }
-  .orb { display: none; }
-  .contact-panel { opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 2.5rem var(--pad); border-radius: 1.375rem; max-width: 44rem; width: 100%; margin-inline: auto; background: radial-gradient(120% 140% at 85% 0%, #FFB000, #FF3B2F 38%, #E0218A 72%, #7A2AD0); }
   .cta-row { grid-template-columns: 1fr 1fr; }
 }
 
-/* ---------- reduced motion: everything shown, nothing moves ---------- */
+/* ---------- static mode (reduced motion, or a phone held sideways): scenes become stacked sections ---------- */
+html.static #manifesto, html.static #howPin, html.static #journey, html.static #reach, html.static #toolkit, html.static #contact { height: auto; }
+html.static .stage { position: relative; height: auto; overflow: visible; }
+html.static #manifesto .stage { padding: 4rem var(--pad) 3rem; display: block; }
+html.static .k-track { display: block; white-space: normal; padding-left: 0; font-size: 3.5rem; line-height: 1; }
+html.static .k-track span[aria-hidden] { transform: none !important; }
+html.static #howPin .stage { padding-top: 0; }
+html.static .schedule { position: relative; }
+html.static .step-meter { display: none; }
+html.static .step-view { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
+html.static .step { position: static; opacity: 1; transform: none; }
+html.static #journey .stage { display: grid; gap: 3rem; padding: 4rem var(--pad); }
+html.static .journey-intro { position: static; padding: 0; }
+html.static .slide { position: static; padding: 0; }
+html.static .slide-word span[aria-hidden], html.static .slide-line, html.static .slide-meta { transform: none !important; opacity: 1 !important; }
+html.static .journey-dots, html.static .deck-hint, html.static .region-tabs { display: none; }
+html.static #reach .stage { padding: 4rem var(--pad) 3rem; }
+html.static .globe-wrap { height: min(70vw, 60vh); }
+html.static .regions { display: grid; gap: 1.25rem; }
+html.static .region { position: static; opacity: 1; transform: none; }
+html.static #toolkit .stage { padding: 4rem var(--pad) 3rem; display: block; perspective: none; }
+html.static .deck { width: 100%; height: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr)); gap: 1rem; margin-top: 1.5rem; transform-style: flat; }
+html.static .card { position: relative; height: 27rem; transform: none !important; opacity: 1 !important; }
+html.static #contact .stage { padding: 3rem var(--pad) 4rem; display: grid; gap: 1.5rem; }
+html.static .orb-intro { position: static; opacity: 1 !important; }
+html.static .orb { display: none; }
+html.static .contact-panel { opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 2.5rem var(--pad); border-radius: 1.375rem; width: 100%; margin-inline: auto; background: radial-gradient(120% 140% at 85% 0%, #FFB000, #FF3B2F 38%, #E0218A 72%, #7A2AD0); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
   .lower-third { clip-path: none; }
-  .kinetic .l, .slide-word span[aria-hidden], .slide-line, .slide-meta { opacity: 1 !important; transform: none !important; }
-  .crawl-track ul + ul { display: none; }
+  .crawl-track ul + ul, .crawl-pause { display: none; }
   .crawl-track, .crawl-track ul { flex-wrap: wrap; width: auto; }
-  .crawl-pause { display: none; }
-  #contact { height: auto; }
-  #contact .stage { position: relative; height: auto; padding: 3rem var(--pad) 4rem; display: grid; gap: 1.5rem; }
-  .orb-intro { position: static; }
-  .orb { display: none; }
-  .contact-panel { opacity: 1; padding: 2.5rem var(--pad); border-radius: 1.375rem; background: radial-gradient(120% 140% at 85% 0%, #FFB000, #FF3B2F 38%, #E0218A 72%, #7A2AD0); }
 }
 </style>
 </head>
@@ -436,19 +463,19 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   </section>
 
   <!-- 2. KINETIC LINE -->
-  <section class="kinetic wrap" id="manifesto" aria-label="From first meeting to on air">
-    <p id="kinetic" data-text="From first meeting to on air.">From first meeting to on air.</p>
+  <section id="manifesto" class="pin" aria-label="From first meeting to on air">
+    <div class="stage"><p class="k-track" id="kTrack" data-text="From first meeting to on air.">From first meeting to on air.</p></div>
   </section>
 
   <!-- 3. HOW I WORK -->
-  <section class="section" id="how" aria-labelledby="how-title" style="padding-top:1rem">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow mono">How I work</p>
-        <h2 class="h2" id="how-title">Eight steps, every go-live.</h2>
-        <p class="lede">Every go-live I've run follows the same eight steps. Scroll to watch a channel schedule come together.</p>
-      </div>
-      <div class="build-visual">
+  <section id="how" aria-labelledby="how-title">
+    <div class="wrap section-head" style="padding-top:3rem">
+      <p class="eyebrow mono">How I work</p>
+      <h2 class="h2" id="how-title">Eight steps, every go-live.</h2>
+      <p class="lede">Every go-live I've run follows the same eight steps. Scroll to watch a channel schedule come together.</p>
+    </div>
+    <div class="pin" id="howPin">
+      <div class="stage">
         <div class="schedule" id="schedule" data-step="1" aria-hidden="true">
           <div class="sch-head"><strong>Channel 1, Tuesday</strong><span class="sch-flag">12 months imported</span></div>
           <ol>
@@ -460,43 +487,47 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
           </ol>
           <div class="sch-foot"><span class="pre-live">Not on air yet</span><span class="post-live">As-run matched</span><strong class="post-live">99.9% uptime</strong></div>
         </div>
+        <div class="step-meter" id="stepMeter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <ol class="step-view" id="steps">
+          <li class="step active" data-step="1"><span class="step-no mono">Step 1 of 8</span><h3 class="h3">Pre-sales</h3><p>Understand the channel before selling anything: how it schedules, sells and bills today, and where it loses time or money.</p></li>
+          <li class="step" data-step="2"><span class="step-no mono">Step 2 of 8</span><h3 class="h3">Requirements</h3><p>BRDs, SOWs and a clear scope. The grid is drawn before anything is built, so nobody argues about it later.</p></li>
+          <li class="step" data-step="3"><span class="step-no mono">Step 3 of 8</span><h3 class="h3">Configuration</h3><p>The BMS is set up around the channel's own workflows: programmes, formats, rights windows and EPG.</p></li>
+          <li class="step" data-step="4"><span class="step-no mono">Step 4 of 8</span><h3 class="h3">Ad sales and traffic</h3><p>Breaks, spots and pricing go in, so every second of airtime can be sold, scheduled and billed.</p></li>
+          <li class="step" data-step="5"><span class="step-no mono">Step 5 of 8</span><h3 class="h3">Migration</h3><p>Years of schedules, contracts and rights move across from the old system without losing a record.</p></li>
+          <li class="step" data-step="6"><span class="step-no mono">Step 6 of 8</span><h3 class="h3">Testing</h3><p>UAT with the people who will run it every day. Nothing goes live until they sign it off.</p></li>
+          <li class="step" data-step="7"><span class="step-no mono">Step 7 of 8</span><h3 class="h3">Go-live</h3><p>Cutover while the channel stays on air. SABC moved its channels to BroadView in December 2024 without going dark.</p></li>
+          <li class="step" data-step="8"><span class="step-no mono">Step 8 of 8</span><h3 class="h3">Operations</h3><p>The part most vendors skip. HA/DR, automation and AI-assisted support keep it running at 99.9% uptime, years after launch.</p></li>
+        </ol>
       </div>
-      <ol class="steps" id="steps">
-        <li data-step="1"><span class="step-no mono">Step 1</span><h3 class="h3">Pre-sales</h3><p>Understand the channel before selling anything: how it schedules, sells and bills today, and where it loses time or money.</p></li>
-        <li data-step="2"><span class="step-no mono">Step 2</span><h3 class="h3">Requirements</h3><p>BRDs, SOWs and a clear scope. The grid is drawn before anything is built, so nobody argues about it later.</p></li>
-        <li data-step="3"><span class="step-no mono">Step 3</span><h3 class="h3">Configuration</h3><p>The BMS is set up around the channel's own workflows: programmes, formats, rights windows and EPG.</p></li>
-        <li data-step="4"><span class="step-no mono">Step 4</span><h3 class="h3">Ad sales and traffic</h3><p>Breaks, spots and pricing go in, so every second of airtime can be sold, scheduled and billed.</p></li>
-        <li data-step="5"><span class="step-no mono">Step 5</span><h3 class="h3">Migration</h3><p>Years of schedules, contracts and rights move across from the old system without losing a record.</p></li>
-        <li data-step="6"><span class="step-no mono">Step 6</span><h3 class="h3">Testing</h3><p>UAT with the people who will run it every day. Nothing goes live until they sign it off.</p></li>
-        <li data-step="7"><span class="step-no mono">Step 7</span><h3 class="h3">Go-live</h3><p>Cutover while the channel stays on air. SABC moved its channels to BroadView in December 2024 without going dark.</p></li>
-        <li data-step="8"><span class="step-no mono">Step 8</span><h3 class="h3">Operations</h3><p>The part most vendors skip. HA/DR, automation and AI-assisted support keep it running at 99.9% uptime, years after launch.</p></li>
-      </ol>
     </div>
   </section>
 
   <!-- 4. JOURNEY -->
-  <section class="night" id="journey" aria-labelledby="journey-title">
-    <h2 class="journey-intro" id="journey-title">My journey, five roles at UTO Solutions</h2>
-    <div class="slide" data-word="First,"><p class="slide-line">I learned the systems.</p><p class="slide-meta"><strong>2011–2016, Client Service Executive.</strong> My first go-live was Sony Entertainment Television's BroadView rollout in Mumbai in 2012, then Viacom18, Network18, Tata Sky, the UAE and Papua New Guinea.</p></div>
-    <div class="slide" data-word="Then,"><p class="slide-line">I took them live, far from home.</p><p class="slide-meta"><strong>2016–2023, Assistant Manager then Manager.</strong> On-site lead for Kwesé TV in Johannesburg. Automated scheduling and traffic, cutting processing time by 40%, and built HA/DR for 99.9% uptime.</p></div>
-    <div class="slide" data-word="Then,"><p class="slide-line">I led national go-lives.</p><p class="slide-meta"><strong>2023–2025, Senior Manager, Client Services and Implementation.</strong> SABC's move to BroadView, the Sentech FreeVision OTT launch, Sony BroadView on AWS, and an AI support chatbot that sped up responses by 30%.</p></div>
-    <div class="slide" data-word="Today,"><p class="slide-line">I run them at scale.</p><p class="slide-meta"><strong>2025–now, Head of Media Technology.</strong> AdTech operations for Warner Bros. Discovery USA across 50+ applications, the RightsU rollout at JioStar, and the technology roadmap and budget, reporting to the Board.</p></div>
+  <section id="journey" class="pin night" aria-labelledby="journey-title">
+    <div class="stage">
+      <h2 class="journey-intro" id="journey-title">My journey, five roles at UTO Solutions</h2>
+      <div class="slide" data-word="First,"><p class="slide-line">I learned the systems.</p><p class="slide-meta"><strong>2011–2016, Client Service Executive.</strong> My first go-live was Sony Entertainment Television's BroadView rollout in Mumbai in 2012, then Viacom18, Network18, Tata Sky, the UAE and Papua New Guinea.</p></div>
+      <div class="slide" data-word="Then,"><p class="slide-line">I took them live, far from home.</p><p class="slide-meta"><strong>2016–2023, Assistant Manager then Manager.</strong> On-site lead for Kwesé TV in Johannesburg. Automated scheduling and traffic, cutting processing time by 40%, and built HA/DR for 99.9% uptime.</p></div>
+      <div class="slide" data-word="Then,"><p class="slide-line">I led national go-lives.</p><p class="slide-meta"><strong>2023–2025, Senior Manager, Client Services and Implementation.</strong> SABC's move to BroadView, the Sentech FreeVision OTT launch, Sony BroadView on AWS, and an AI support chatbot that sped up responses by 30%.</p></div>
+      <div class="slide" data-word="Today,"><p class="slide-line">I run them at scale.</p><p class="slide-meta"><strong>2025–now, Head of Media Technology.</strong> AdTech operations for Warner Bros. Discovery USA across 50+ applications, the RightsU rollout at JioStar, and the technology roadmap and budget, reporting to the Board.</p></div>
+      <div class="journey-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
   </section>
 
   <!-- 5. REACH -->
-  <section class="night" id="reach" aria-labelledby="reach-title">
-    <div class="wrap reach-head">
+  <section id="reach" class="pin night" aria-labelledby="reach-title">
+    <div class="stage">
       <h2 class="h2" id="reach-title">12 go-lives on four continents.</h2>
-      <p class="lede">Every one on site, with the people who run the channel every day.</p>
+      <div class="globe-wrap" id="globeWrap" aria-hidden="true"></div>
+      <div class="region-tabs" id="regionTabs" aria-label="Countries"></div>
+      <ol class="regions" id="regions">
+        <li class="region active"><h3>India <span>5 go-lives</span></h3><p>Sony Entertainment Television, Viacom18, Network18, Reliance Big Magic, Tata Sky. Now the RightsU rollout at JioStar.</p></li>
+        <li class="region"><h3>UAE <span>3 go-lives</span></h3><p>Moby Media Group and Alliance Media / Urdu1 in Dubai, Image Nation / Quest Arabia in Abu Dhabi.</p></li>
+        <li class="region"><h3>South Africa <span>3 go-lives</span></h3><p>Econet Media / Kwesé TV, Sentech's FreeVision OTT launch, and SABC, the national broadcaster.</p></li>
+        <li class="region"><h3>Papua New Guinea <span>1 go-live</span></h3><p>EMTV in Port Moresby, 2013.</p></li>
+        <li class="region"><h3>USA <span>live now</span></h3><p>Warner Bros. Discovery AdTech operations, 50+ applications.</p></li>
+      </ol>
     </div>
-    <div class="globe-sticky"><div class="globe-wrap" id="globeWrap" aria-hidden="true"></div></div>
-    <ol class="regions wrap" id="regions">
-      <li class="region active" data-stop="0"><h3>India <span>5 go-lives</span></h3><p>Sony Entertainment Television, Viacom18, Network18, Reliance Big Magic, Tata Sky. Now the RightsU rollout at JioStar.</p></li>
-      <li class="region" data-stop="1"><h3>UAE <span>3 go-lives</span></h3><p>Moby Media Group and Alliance Media / Urdu1 in Dubai, Image Nation / Quest Arabia in Abu Dhabi.</p></li>
-      <li class="region" data-stop="2"><h3>South Africa <span>3 go-lives</span></h3><p>Econet Media / Kwesé TV, Sentech's FreeVision OTT launch, and SABC, the national broadcaster.</p></li>
-      <li class="region" data-stop="3"><h3>Papua New Guinea <span>1 go-live</span></h3><p>EMTV in Port Moresby, 2013.</p></li>
-      <li class="region" data-stop="4"><h3>USA <span>live now</span></h3><p>Warner Bros. Discovery AdTech operations, 50+ applications.</p></li>
-    </ol>
   </section>
 
   <!-- 6. TRACK RECORD -->
@@ -583,26 +614,27 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   </section>
 
   <!-- 7. TOOLKIT -->
-  <section class="night toolkit" id="toolkit" aria-labelledby="toolkit-title">
-    <div class="wrap section-head">
-      <h2 class="h2" id="toolkit-title">Toolkit</h2>
-      <p class="lede">Broadcast, AdTech, enterprise, AI, and the paperwork to prove it</p>
+  <section id="toolkit" class="pin night" aria-labelledby="toolkit-title">
+    <div class="stage">
+      <div class="toolkit-head">
+        <h2 class="h2" id="toolkit-title">Toolkit</h2>
+        <p>Broadcast, AdTech, enterprise, AI, and the paperwork to prove it</p>
+      </div>
+      <div class="deck" id="deck">
+        <article class="card" style="--c:#FF3B2F"><div class="card-top"><span>AdTech and BMS</span><span>1 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/broadcast-control.webp" alt="" width="720" height="479" decoding="async"></figure><div><h3>Broadcast management</h3><ul><li>BroadView</li><li>RightsU</li><li>SSAI / CSAI</li><li>SCTE-35</li><li>FAST, CTV</li><li>EPG</li><li>Revenue assurance</li></ul></div></article>
+        <article class="card" style="--c:#1B2BD9"><div class="card-top"><span>Enterprise</span><span>2 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/finance-ticker.webp" alt="" width="720" height="540" loading="lazy" decoding="async"></figure><div><h3>ERP and SAP</h3><ul><li>SAP</li><li>Finance and billing</li><li>Amortisation</li><li>Contract management</li><li>BI dashboards</li></ul></div></article>
+        <article class="card" style="--c:#D81E80"><div class="card-top"><span>Broadcast</span><span>3 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/broadcast-vtr.webp" alt="" width="720" height="540" loading="lazy" decoding="async"></figure><div><h3>Playout and MAM</h3><ul><li>Dalet, Flex, Avid, Xytech</li><li>Imagine, Pebble Beach</li><li>Harmonic, iTX, Grass Valley</li><li>OTT, CDN, DRM</li></ul></div></article>
+        <article class="card" style="--c:#0C8063"><div class="card-top"><span>Cloud and data</span><span>4 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/data-center.webp" alt="" width="720" height="481" loading="lazy" decoding="async"></figure><div><h3>Infrastructure</h3><ul><li>AWS Elemental, MediaLive</li><li>Azure</li><li>HA/DR</li><li>SQL, Firebird</li><li>REST APIs, PowerShell</li></ul></div></article>
+        <article class="card on-light" style="--c:#E58A00"><div class="card-top"><span>Delivery</span><span>5 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/wireframe.webp" alt="" width="720" height="340" loading="lazy" decoding="async"></figure><div><h3>Product and design</h3><ul><li>JIRA, Asana, ClickUp</li><li>Figma, Adobe XD</li><li>Axure, Balsamiq</li><li>Indigo Studio</li><li>Lucidchart, Visio</li></ul></div></article>
+        <article class="card" style="--c:#2A2D36"><div class="card-top"><span>Leadership</span><span>6 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/boardroom.webp" alt="" width="720" height="481" loading="lazy" decoding="async"></figure><div><h3>Running the business</h3><ul><li>Product strategy, P&amp;L</li><li>Pre-sales</li><li>BRD, SOP, SOW</li><li>Vendor sourcing</li><li>Change management</li><li>C-suite reviews</li></ul></div></article>
+        <article class="card creds"><div class="card-top"><span>Credentials</span><span>7 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/mortarboard.webp" alt="" width="720" height="480" loading="lazy" decoding="async"></figure><div><h3>Certified and qualified</h3><ul>
+          <li><strong>Certified Scrum Product Owner (CSPO®)</strong>Scrum Alliance <span class="mono">· 2023</span></li>
+          <li><strong>Diploma in Software Engineering (GNIIT)</strong>NIIT Mumbai <span class="mono">· 2011</span></li>
+          <li><strong>Bachelor of Commerce</strong>Mumbai University, Thakur College <span class="mono">· 2011</span></li>
+        </ul></div></article>
+      </div>
+      <p class="deck-hint" aria-hidden="true">Keep scrolling to deal the deck</p>
     </div>
-    <div class="deck" id="deck" tabindex="0" role="region" aria-label="Toolkit cards, swipe sideways">
-      <article class="card" style="--c:#FF3B2F" aria-label="Card 1 of 7"><div class="card-top"><span>AdTech and BMS</span><span>1 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/broadcast-control.webp" alt="" width="720" height="479" loading="lazy" decoding="async"></figure><div><h3>Broadcast management</h3><ul><li>BroadView</li><li>RightsU</li><li>SSAI / CSAI</li><li>SCTE-35</li><li>FAST, CTV</li><li>EPG</li><li>Revenue assurance</li></ul></div></article>
-      <article class="card" style="--c:#1B2BD9" aria-label="Card 2 of 7"><div class="card-top"><span>Enterprise</span><span>2 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/finance-ticker.webp" alt="" width="720" height="540" loading="lazy" decoding="async"></figure><div><h3>ERP and SAP</h3><ul><li>SAP</li><li>Finance and billing</li><li>Amortisation</li><li>Contract management</li><li>BI dashboards</li></ul></div></article>
-      <article class="card" style="--c:#D81E80" aria-label="Card 3 of 7"><div class="card-top"><span>Broadcast</span><span>3 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/broadcast-vtr.webp" alt="" width="720" height="540" loading="lazy" decoding="async"></figure><div><h3>Playout and MAM</h3><ul><li>Dalet, Flex, Avid, Xytech</li><li>Imagine, Pebble Beach</li><li>Harmonic, iTX, Grass Valley</li><li>OTT, CDN, DRM</li></ul></div></article>
-      <article class="card" style="--c:#0C8063" aria-label="Card 4 of 7"><div class="card-top"><span>Cloud and data</span><span>4 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/data-center.webp" alt="" width="720" height="481" loading="lazy" decoding="async"></figure><div><h3>Infrastructure</h3><ul><li>AWS Elemental, MediaLive</li><li>Azure</li><li>HA/DR</li><li>SQL, Firebird</li><li>REST APIs, PowerShell</li></ul></div></article>
-      <article class="card on-light" style="--c:#E58A00" aria-label="Card 5 of 7"><div class="card-top"><span>Delivery</span><span>5 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/wireframe.webp" alt="" width="720" height="340" loading="lazy" decoding="async"></figure><div><h3>Product and design</h3><ul><li>JIRA, Asana, ClickUp</li><li>Figma, Adobe XD</li><li>Axure, Balsamiq</li><li>Indigo Studio</li><li>Lucidchart, Visio</li></ul></div></article>
-      <article class="card" style="--c:#2A2D36" aria-label="Card 6 of 7"><div class="card-top"><span>Leadership</span><span>6 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/boardroom.webp" alt="" width="720" height="481" loading="lazy" decoding="async"></figure><div><h3>Running the business</h3><ul><li>Product strategy, P&amp;L</li><li>Pre-sales</li><li>BRD, SOP, SOW</li><li>Vendor sourcing</li><li>Change management</li><li>C-suite reviews</li></ul></div></article>
-      <article class="card creds" aria-label="Card 7 of 7"><div class="card-top"><span>Credentials</span><span>7 of 7</span></div><figure class="card-art" aria-hidden="true"><img src="toolkit/mortarboard.webp" alt="" width="720" height="480" loading="lazy" decoding="async"></figure><div><h3>Certified and qualified</h3><ul>
-        <li><strong>Certified Scrum Product Owner (CSPO®)</strong>Scrum Alliance <span class="mono">· 2023</span></li>
-        <li><strong>Diploma in Software Engineering (GNIIT)</strong>NIIT Mumbai <span class="mono">· 2011</span></li>
-        <li><strong>Bachelor of Commerce</strong>Mumbai University, Thakur College <span class="mono">· 2011</span></li>
-      </ul></div></article>
-    </div>
-    <div class="deck-dots" id="deckDots" aria-label="Choose a card"></div>
-    <p class="deck-hint" aria-hidden="true">Swipe for more</p>
   </section>
 
   <!-- 8. QUOTE -->
@@ -613,12 +645,12 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   </section>
 
   <!-- 9. FINALE -->
-  <section id="contact" aria-labelledby="contact-title">
+  <section id="contact" class="pin" aria-labelledby="contact-title">
     <div class="stage">
       <div class="orb-intro" id="orbIntro" aria-hidden="true"><h2>What's next?</h2><p>Keep scrolling</p></div>
       <div class="orb" id="orb" aria-hidden="true"></div>
       <div class="contact-panel" id="contactPanel">
-        <h2 id="contact-title">Planning a <span style="white-space:nowrap">go-live?</span> Let's talk.</h2>
+        <h2 id="contact-title">Planning a <span class="nowrap">go-live?</span> Let's talk.</h2>
         <p>One conversation, no obligation. Media technology leadership, broadcast platforms and strategic partnerships.</p>
         <div class="cta-row">
           <a class="btn btn-solid" href="mailto:kayozm@gmail.com">Email me</a>
@@ -640,11 +672,15 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 
 <script>
 (function () {
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.__reduceMotion = reduce;
   var root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var sidewaysMQ = matchMedia('(orientation: landscape) and (max-height: 540px)');
+  function isStatic() { return root.classList.contains('static'); }
   function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
   function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function progressOf(el) { var r = el.getBoundingClientRect(), total = r.height - innerHeight; return total <= 0 ? (r.top <= 0 ? 1 : 0) : clamp(-r.top / total, 0, 1); }
+  function near(el) { var r = el.getBoundingClientRect(); return r.bottom > -innerHeight && r.top < innerHeight * 2; }
+  window.__reduceMotion = reduce;
 
   /* ---- live IST clock ---- */
   var tc = document.getElementById('tc');
@@ -679,82 +715,52 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href').length < 2) return;
     var t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return;
-    if (t.id === 'contact' && !reduce && !matchMedia('(orientation: landscape) and (max-height: 540px)').matches) { e.preventDefault(); scrollTo({ top: contactTop(), behavior: 'smooth' }); history.replaceState(null, '', '#contact'); return; }
+    if (t.id === 'contact' && !isStatic()) { e.preventDefault(); scrollTo({ top: contactTop(), behavior: 'smooth' }); history.replaceState(null, '', '#contact'); return; }
     if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
     setTimeout(function () { t.focus({ preventScroll: true }); }, 0);
   });
 
   /* ---- news crawl ---- */
-  var crawl = document.getElementById('crawl'), track = crawl.querySelector('.crawl-track'), cBtn = document.getElementById('crawlPause');
+  var crawl = document.getElementById('crawl'), ctrack = crawl.querySelector('.crawl-track'), cBtn = document.getElementById('crawlPause');
   if (!reduce) {
-    var copy = track.querySelector('ul').cloneNode(true); copy.setAttribute('aria-hidden', 'true'); track.appendChild(copy);
+    var copy = ctrack.querySelector('ul').cloneNode(true); copy.setAttribute('aria-hidden', 'true'); ctrack.appendChild(copy);
     crawl.classList.add('is-ready');
     cBtn.addEventListener('click', function () { var p = crawl.classList.toggle('is-paused'); cBtn.setAttribute('aria-pressed', p); cBtn.setAttribute('aria-label', p ? 'Play the scrolling list' : 'Pause the scrolling list'); });
   }
 
-  /* ---- kinetic line: letters fall into place when it comes into view ---- */
-  var kin = document.getElementById('kinetic'), text = kin.dataset.text, acc = 'on air', aFrom = text.indexOf(acc), aTo = aFrom + acc.length;
-  kin.textContent = '';
-  var sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = text; kin.appendChild(sr);
-  var idx = 0;
-  text.split(' ').forEach(function (word, wi) {
-    var w = document.createElement('span'); w.className = 'w'; w.setAttribute('aria-hidden', 'true');
-    for (var k = 0; k < word.length; k++, idx++) {
-      var l = document.createElement('span'); l.className = 'l'; l.textContent = word[k];
-      if (idx >= aFrom && idx < aTo) l.classList.add('accent');
-      var seed = (Math.sin(idx * 12.9898) * 43758.5453 % 1 + 1) % 1;
-      l.style.setProperty('--i', idx); l.style.setProperty('--r', ((seed - .5) * 60).toFixed(0) + 'deg');
-      w.appendChild(l);
-    }
-    kin.appendChild(w);
-    if (wi < text.split(' ').length - 1) { kin.appendChild(document.createTextNode(' ')); idx++; }
-  });
-  function onView(el, cls, margin) { new IntersectionObserver(function (es, o) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add(cls); o.unobserve(e.target); } }); }, { rootMargin: margin || '0px 0px -20% 0px' }).observe(el); }
-  onView(document.getElementById('manifesto'), 'in');
+  /* ---- kinetic line: one letter per span (screen readers get the plain sentence) ---- */
+  var kTrack = document.getElementById('kTrack'), text = kTrack.dataset.text, acc = 'on air', aFrom = text.indexOf(acc), aTo = aFrom + acc.length;
+  kTrack.textContent = '';
+  var sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = text; kTrack.appendChild(sr);
+  var letters = [], seeds = [];
+  for (var i = 0; i < text.length; i++) {
+    var s = document.createElement('span'); s.setAttribute('aria-hidden', 'true');
+    s.textContent = text[i] === ' ' ? ' ' : text[i];
+    if (i >= aFrom && i < aTo) s.className = 'accent';
+    seeds.push((Math.sin(i * 12.9898) * 43758.5453 % 1 + 1) % 1);
+    kTrack.appendChild(s); letters.push(s);
+    if (text[i] === ' ') kTrack.appendChild(document.createTextNode('​')); /* lets the line wrap between words in static mode */
+  }
 
-  /* ---- journey: big word letter by letter ---- */
-  document.querySelectorAll('.slide').forEach(function (slide) {
+  /* ---- journey: big word, letter by letter ---- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  slides.forEach(function (slide) {
     var w = document.createElement('p'); w.className = 'slide-word';
-    var s = document.createElement('span'); s.className = 'sr-only'; s.textContent = slide.dataset.word; w.appendChild(s);
-    slide.dataset.word.split('').forEach(function (ch, i) { var sp = document.createElement('span'); sp.setAttribute('aria-hidden', 'true'); sp.style.setProperty('--i', i); sp.textContent = ch; w.appendChild(sp); });
+    var t = document.createElement('span'); t.className = 'sr-only'; t.textContent = slide.dataset.word; w.appendChild(t);
+    slide.dataset.word.split('').forEach(function (ch, k) { var sp = document.createElement('span'); sp.setAttribute('aria-hidden', 'true'); sp.style.setProperty('--i', k); sp.textContent = ch; w.appendChild(sp); });
     slide.insertBefore(w, slide.firstChild);
-    onView(slide, 'in', '0px 0px -25% 0px');
   });
 
-  /* ---- how I work: schedule follows the step in view ---- */
-  var schedule = document.getElementById('schedule'), steps = document.querySelectorAll('#steps li');
-  if (reduce) { schedule.dataset.step = '8'; steps.forEach(function (li) { li.classList.add('active'); }); }
-  else {
-    var so = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; steps.forEach(function (li) { li.classList.remove('active'); }); e.target.classList.add('active'); schedule.dataset.step = e.target.dataset.step; }); }, { rootMargin: '-55% 0px -40% 0px' });
-    steps.forEach(function (li) { so.observe(li); }); steps[0].classList.add('active');
-  }
-
-  /* ---- reach: the region in view turns the globe ---- */
-  var regions = Array.prototype.slice.call(document.querySelectorAll('.region'));
-  window.__reachStop = 0;
-  var ro = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; regions.forEach(function (r) { r.classList.toggle('active', r === e.target); }); window.__reachStop = +e.target.dataset.stop; }); }, { rootMargin: '-60% 0px -35% 0px' });
-  regions.forEach(function (r) { ro.observe(r); });
-
-  /* ---- toolkit: swipeable deck with dots ---- */
-  var deck = document.getElementById('deck'), cards = Array.prototype.slice.call(deck.querySelectorAll('.card')), dotsEl = document.getElementById('deckDots');
-  cards.forEach(function (c, i) {
-    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show card ' + (i + 1) + ' of ' + cards.length);
-    b.addEventListener('click', function () { deck.scrollTo({ left: c.offsetLeft - (deck.clientWidth - c.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); });
-    dotsEl.appendChild(b);
-  });
-  var dots = Array.prototype.slice.call(dotsEl.children), dq = false, lastCard = -1;
-  function deckFrame() {
-    dq = false;
-    var mid = deck.scrollLeft + deck.clientWidth / 2, best = 0, bd = 1e9;
-    cards.forEach(function (c, i) {
-      var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid), n = clamp(d / c.offsetWidth, 0, 1);
-      if (d < bd) { bd = d; best = i; }
-      if (!reduce) { c.style.setProperty('--s', (1 - n * .08).toFixed(3)); c.style.setProperty('--o', (1 - n * .35).toFixed(3)); }
+  /* ---- reach: country tabs ---- */
+  var reach = document.getElementById('reach'), regions = Array.prototype.slice.call(document.querySelectorAll('.region')), tabsEl = document.getElementById('regionTabs');
+  var tabs = regions.map(function (r, k) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = r.querySelector('h3').firstChild.textContent.trim();
+    b.addEventListener('click', function () { /* jump to that country's point in the scroll scene */
+      var top = reach.getBoundingClientRect().top + scrollY + (reach.offsetHeight - innerHeight) * (k / (regions.length - 1));
+      scrollTo({ top: top, behavior: 'smooth' });
     });
-    if (best !== lastCard) { lastCard = best; dots.forEach(function (d, i) { if (i === best) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); }); }
-  }
-  deck.addEventListener('scroll', function () { if (!dq) { dq = true; requestAnimationFrame(deckFrame); } }, { passive: true });
-  addEventListener('resize', deckFrame); deckFrame();
+    tabsEl.appendChild(b); return b;
+  });
 
   /* ---- photo credits ---- */
   fetch('toolkit/credits.json').then(function (r) { return r.json(); }).then(function (list) {
@@ -774,27 +780,111 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     a.href = 'tel:' + n.replace(/\s/g, ''); a.textContent = n; phoneBtn.replaceWith(a); a.focus();
   }, { once: true });
 
-  /* ---- finale: orb grows to fill the screen, then the contact panel ---- */
-  if (reduce) return;
-  var orb = document.getElementById('orb'), orbIntro = document.getElementById('orbIntro'), panel = document.getElementById('contactPanel'), fq = false;
-  var sideways = matchMedia('(orientation: landscape) and (max-height: 540px)');
-  sideways.addEventListener('change', function () { [orb, orbIntro, panel].forEach(function (el) { el.style.transform = ''; el.style.opacity = ''; el.style.pointerEvents = ''; }); finale(); });
-  function finale() {
-    fq = false;
-    if (sideways.matches) return;
-    var r = contact.getBoundingClientRect(), vh = innerHeight, vw = innerWidth;
-    if (r.bottom < -vh || r.top > vh * 2) return;
-    var pc = clamp(-r.top / (r.height - vh), 0, 1);
-    var g = ease(clamp(pc / .7, 0, 1)), cover = Math.hypot(vw, vh) / (vw * .4) * 1.15;
-    orb.style.transform = 'scale(' + (.35 + g * cover).toFixed(3) + ') rotate(' + (pc * 120).toFixed(1) + 'deg)';
-    orbIntro.style.opacity = 1 - clamp(pc / .3, 0, 1);
-    var pv = clamp((pc - .62) / .2, 0, 1);
-    panel.style.opacity = pv; panel.style.pointerEvents = pv > .5 ? 'auto' : 'none';
-    panel.style.transform = 'translateY(' + ((1 - pv) * 1.5).toFixed(2) + 'rem)';
+  /* =========================================================
+     Scroll scenes (same choreography as the desktop site)
+     ========================================================= */
+  var manifesto = document.getElementById('manifesto'), howPin = document.getElementById('howPin'), journey = document.getElementById('journey'), toolkit = document.getElementById('toolkit');
+  var schedule = document.getElementById('schedule'), steps = Array.prototype.slice.call(document.querySelectorAll('.step')), meter = Array.prototype.slice.call(document.querySelectorAll('#stepMeter i'));
+  var jdots = Array.prototype.slice.call(document.querySelectorAll('.journey-dots i'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card')), hint = toolkit.querySelector('.deck-hint');
+  var orb = document.getElementById('orb'), orbIntro = document.getElementById('orbIntro'), panel = document.getElementById('contactPanel');
+
+  var trackW = 0, letterMid = [];
+  function measure() {
+    var saved = kTrack.style.transform; kTrack.style.transform = 'none';
+    trackW = kTrack.scrollWidth; letterMid = letters.map(function (L) { return L.offsetLeft + L.offsetWidth / 2; });
+    kTrack.style.transform = saved;
   }
-  addEventListener('scroll', function () { if (!fq) { fq = true; requestAnimationFrame(finale); } }, { passive: true });
-  addEventListener('resize', finale); finale();
-  panel.addEventListener('focusin', function () { if (sideways.matches) return; var r = contact.getBoundingClientRect(); if (clamp(-r.top / (r.height - innerHeight), 0, 1) < .85) scrollTo({ top: contactTop(), behavior: 'instant' }); });
+  function setStatic(on) {
+    root.classList.toggle('static', on);
+    if (on) {
+      /* clear what the scenes had set, show everything */
+      kTrack.style.transform = ''; letters.forEach(function (L) { L.style.transform = ''; });
+      cards.forEach(function (c) { c.style.transform = ''; c.style.opacity = ''; c.style.zIndex = ''; });
+      [orb, orbIntro, panel, hint].forEach(function (el) { el.style.transform = ''; el.style.opacity = ''; el.style.pointerEvents = ''; });
+      schedule.dataset.step = '8';
+      regions.forEach(function (r) { r.classList.add('active'); });
+      window.__reachProgress = 0;
+    } else { lastStep = lastSlide = lastRegion = -1; measure(); }
+    request();
+  }
+
+  var queued = false, lastStep = -1, lastSlide = -1, lastRegion = -1;
+  function request() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
+  function frame() {
+    queued = false;
+    if (isStatic()) return;
+    var vw = innerWidth, vh = innerHeight;
+
+    /* kinetic line: slides left, letters tumble in from the right edge */
+    if (near(manifesto)) {
+      var tx = -progressOf(manifesto) * (trackW - vw * .15);
+      kTrack.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,0,0)';
+      for (var i = 0; i < letters.length; i++) {
+        var x = letterMid[i] + tx;
+        if (x < -vw * .5 || x > vw * 1.5) continue;
+        var f = clamp((x - vw * .45) / (vw * .55), 0, 1); f = f * f;
+        letters[i].style.transform = 'translate3d(0,' + (-f * (seeds[i] - .35) * vh * .55).toFixed(1) + 'px,0) rotate(' + (f * (seeds[i] - .5) * 70).toFixed(1) + 'deg)';
+      }
+    }
+
+    /* how I work: one step at a time under a still schedule */
+    var si = Math.min(7, Math.floor(progressOf(howPin) * 8 * .999));
+    if (si !== lastStep) {
+      lastStep = si; schedule.dataset.step = String(si + 1);
+      steps.forEach(function (s, k) { s.classList.toggle('active', k === si); s.classList.toggle('past', k < si); });
+      meter.forEach(function (m, k) { m.classList.toggle('on', k <= si); });
+    }
+
+    /* journey: one word at a time */
+    var ji = Math.min(slides.length - 1, Math.floor(progressOf(journey) * slides.length * .999));
+    if (ji !== lastSlide) {
+      lastSlide = ji;
+      slides.forEach(function (s, k) { s.classList.toggle('active', k === ji); s.classList.toggle('past', k < ji); });
+      jdots.forEach(function (d, k) { d.classList.toggle('on', k === ji); });
+    }
+
+    /* reach: one country at a time; the globe turns with the scroll */
+    var pr = progressOf(reach); window.__reachProgress = pr;
+    var ri = Math.min(regions.length - 1, Math.round(pr * (regions.length - 1)));
+    if (ri !== lastRegion) {
+      lastRegion = ri;
+      regions.forEach(function (r, k) { r.classList.toggle('active', k === ri); });
+      tabs.forEach(function (b, k) { if (k === ri) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      var tb = tabs[ri]; tabsEl.scrollTo({ left: tb.offsetLeft - (tabsEl.clientWidth - tb.offsetWidth) / 2, behavior: 'smooth' }); /* keep the current country in view */
+    }
+
+    /* toolkit: deal the deck */
+    if (near(toolkit)) {
+      var pt = progressOf(toolkit), s = ease(pt) * (cards.length - 1);
+      hint.style.opacity = 1 - clamp(pt * 6, 0, 1);
+      cards.forEach(function (c, k) {
+        var d = s - k, tf;
+        if (d >= 0) { var t = clamp(d, 0, 1); tf = 'translate3d(' + (-t * 75) + 'vw,' + (-t * 12) + 'vh,' + (t * 120) + 'px) rotateY(' + (-t * 75) + 'deg) rotateZ(' + (-t * 14) + 'deg)'; c.style.opacity = 1 - t * .9; }
+        else { var w = Math.min(-d, 3); tf = 'translate3d(0,' + (w * 1.125) + 'rem,' + (-w * 70) + 'px) rotateX(' + (w * 6) + 'deg)'; c.style.opacity = w >= 3 ? 0 : 1; }
+        c.style.transform = tf; c.style.zIndex = 100 - k;
+      });
+    }
+
+    /* finale: orb grows to fill the screen, then the contact panel */
+    if (near(contact)) {
+      var pc = progressOf(contact), g = ease(clamp(pc / .7, 0, 1)), cover = Math.hypot(vw, vh) / (vw * .4) * 1.15;
+      orb.style.transform = 'scale(' + (.35 + g * cover).toFixed(3) + ') rotate(' + (pc * 120).toFixed(1) + 'deg)';
+      orbIntro.style.opacity = 1 - clamp(pc / .3, 0, 1);
+      var pv = clamp((pc - .62) / .2, 0, 1);
+      panel.style.opacity = pv; panel.style.pointerEvents = pv > .5 ? 'auto' : 'none';
+      panel.style.transform = 'translateY(' + ((1 - pv) * 1.5).toFixed(2) + 'rem)';
+    }
+  }
+
+  panel.addEventListener('focusin', function () { if (!isStatic() && progressOf(contact) < .85) scrollTo({ top: contactTop(), behavior: 'instant' }); });
+  addEventListener('scroll', request, { passive: true });
+  addEventListener('resize', function () { if (!isStatic()) measure(); request(); });
+  sidewaysMQ.addEventListener('change', function (m) { if (!reduce) setStatic(m.matches); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); request(); });
+  setStatic(reduce || sidewaysMQ.matches);
+  if (!isStatic()) measure();
+  request();
 })();
 </script>
 
@@ -802,6 +892,8 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 <script type="module">
 import * as THREE from 'three';
 const reduce = window.__reduceMotion;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 function canWebGL() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
 (function globe() {
   if (!canWebGL()) return;
@@ -839,12 +931,14 @@ function canWebGL() { try { const c = document.createElement('canvas'); return !
     world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(new THREE.QuadraticBezierCurve3(home, mid, end).getPoints(64)), new THREE.LineBasicMaterial({ color: '#FFB000', transparent: true, opacity: .85 }))); });
   const stops = [ll(21, 75, 1), ll(24.8, 55, 1), ll(-26.2, 28.05, 1), ll(-9.44, 147.18, 1), ll(33.75, -84.39, 1)].map(v => ({ ry: -Math.atan2(v.x, v.z), rx: Math.atan2(v.y, Math.hypot(v.x, v.z)) }));
   function lerpAngle(a, b, t) { const d = ((b - a + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI; return a + d * t; }
-  function resize() { const w = wrap.clientWidth, h = wrap.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  function resize() { const w = wrap.clientWidth, h = wrap.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); camera.position.z = camera.aspect < 1 ? 7.4 / Math.max(camera.aspect, .62) : 7.4; }
   resize(); addEventListener('resize', () => { resize(); if (reduce) render(); });
   const clock = new THREE.Clock(), cur = { rx: stops[0].rx, ry: stops[0].ry };
   function render() {
-    const t = clock.getElapsedTime(), s = stops[window.__reachStop || 0];
-    cur.rx += (s.rx - cur.rx) * (reduce ? 1 : .06); cur.ry = lerpAngle(cur.ry, s.ry, reduce ? 1 : .06);
+    const t = clock.getElapsedTime(), pr = window.__reachProgress || 0;
+    const f = pr * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(f)), k = easeInOut(clamp(f - i, 0, 1));
+    const target = { rx: stops[i].rx + (stops[i + 1].rx - stops[i].rx) * k, ry: lerpAngle(stops[i].ry, stops[i + 1].ry, k) };
+    cur.rx += (target.rx - cur.rx) * (reduce ? 1 : .08); cur.ry = lerpAngle(cur.ry, target.ry, reduce ? 1 : .08);
     world.rotation.x = cur.rx; world.rotation.y = cur.ry;
     if (!reduce) rings.forEach((r, j) => { const ph = (t * .8 + j * .37) % 1; r.scale.setScalar(1 + ph * 2.2); r.material.opacity = 1 - ph; });
     renderer.render(scene, camera);

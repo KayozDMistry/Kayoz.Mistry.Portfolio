@@ -1,6 +1,28 @@
-# v6-d: a dedicated phone edition
+# v6-e: the phone edition moves like the desktop site
 
-v6-d is a copy of v6-c with a separate page built for phones. v6-c itself was not edited.
+v6-e is a copy of v6-d. Only `mobile.html` changed; `index.html` is identical to v6-d's. v6-d itself was not edited.
+
+## What changed on phones
+
+| # | Section | Before (v6-d) | Now (v6-e) |
+|---|---------|---------------|------------|
+| 1 | "From first meeting to on air." | Letters dropped in once | Same scroll-driven tumbling letters as desktop |
+| 2 | Channel 1, Tuesday | Card stuck to the top while step text scrolled underneath it | Card holds still with a progress bar; one step at a time appears below it, never underneath |
+| 3 | First, / Then, / Today, | Separate blocks you scrolled past | Same one-word-at-a-time story as desktop, with progress dots |
+| 4 | 12 go-lives globe | Globe stuck to the top and country text slid under it | Globe holds still; one country at a time below it, plus a row of country buttons you can tap |
+| 5 | Toolkit | Swipe carousel | Same 3D deck as desktop, dealt away as you scroll |
+
+- **Sideways or reduced motion:** with the phone held sideways, or with "reduce motion" switched on, these sections show as simple stacked sections so nothing is cut off. Rotating back brings the animations back.
+- **Testing:** tested on 320, 375, 412 and 430px-wide phones and in desktop-site mode. No overlaps, no sideways scrolling, no errors.
+- **Google Analytics:** confirmed sending page views from the phone page (G-8XKXJR31YP).
+
+To publish, replace `mobile.html` on GitHub with this one. Nothing else needs uploading again.
+
+---
+
+# Earlier: v6-d, a dedicated phone edition
+
+v6-d is a copy of v6-c with a separate page built for phones.
 
 ## How it works
 
