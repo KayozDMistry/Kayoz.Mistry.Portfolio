@@ -646,7 +646,7 @@ html.static-stories .contact-panel h2 { font-size: clamp(2rem, 6vw, 3.5rem); }
     <a class="brand" href="#top" aria-label="Kayoz Mistry, back to top">KM</a>
     <p class="timecode mono" aria-hidden="true">
       <span class="on-air">ON AIR</span>
-      <span id="tc">--:--:--:--</span><span class="tc-zone">IST</span>
+      <span id="tc">--:--:--:--</span><span class="tc-zone" id="tcZone"></span>
     </p>
     <nav class="nav-links" aria-label="Sections">
       <ul>
@@ -764,7 +764,7 @@ html.static-stories .contact-panel h2 { font-size: clamp(2rem, 6vw, 3.5rem); }
         <div class="build-visual">
           <div class="schedule" id="schedule" data-step="1" aria-hidden="true">
             <div class="sch-head">
-              <strong>Channel 1, Tuesday</strong>
+              <strong>KaY TV, <span id="schDay">Today</span></strong>
               <span class="sch-flag">12 months of history imported</span>
             </div>
             <ol class="sch-rows">
@@ -1014,9 +1014,27 @@ html.static-stories .contact-panel h2 { font-size: clamp(2rem, 6vw, 3.5rem); }
     return total <= 0 ? (r.top <= 0 ? 1 : 0) : clamp(-r.top / total, 0, 1);
   }
 
-  /* ---- Live IST timecode (25 fps, PAL, as used in India) ---- */
+  /* ---- Live timecode in the visitor's own time zone (hh:mm:ss:frames, 25 fps PAL) ---- */
   var tc = document.getElementById('tc');
-  var fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  var fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  /* The visitor's own time zone label: EDT in New York, IST in Mumbai, GST/GMT+4 in Dubai.
+     Tries the visitor's language first, then common English ones, preferring a short name like "EDT" over "GMT-4". */
+  function zoneLabel(now) {
+    var locs = [navigator.language || 'en-US', 'en-US', 'en-GB', 'en-IN', 'en-AU'], fallback = '';
+    for (var i = 0; i < locs.length; i++) {
+      try {
+        var part = new Intl.DateTimeFormat(locs[i], { timeZoneName: 'short' }).formatToParts(now).filter(function (p) { return p.type === 'timeZoneName'; })[0];
+        if (!part) continue;
+        if (!fallback) fallback = part.value;
+        if (/^[A-Z]{2,5}$/.test(part.value) && !/^(GMT|UTC)$/.test(part.value)) return part.value;
+      } catch (e) {}
+    }
+    return (fallback || 'Local').replace(/^UTC/, 'GMT');
+  }
+  var tcZone = document.getElementById('tcZone');
+  function syncZone() { var z = zoneLabel(new Date()); if (tcZone.textContent !== z) tcZone.textContent = z; }
+  syncZone(); setInterval(syncZone, 60000); /* picks up daylight-saving changes */
+  try { tc.parentNode.title = 'Your local time (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')'; } catch (e) {}
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
   var lastTc = '', lastSec = -1, hms = '';
   function tick() {
@@ -1312,6 +1330,15 @@ html.static-stories .contact-panel h2 { font-size: clamp(2rem, 6vw, 3.5rem); }
 </script>
 
 <!-- ============ Globe (Three.js, only module on the page) ============ -->
+<script>
+/* "KaY TV, <today>": the schedule shows today's weekday in the visitor's own time zone and turns over at their midnight */
+(function () {
+  var el = document.getElementById('schDay'); if (!el) return;
+  var fmt = new Intl.DateTimeFormat('en-GB', { weekday: 'long' });
+  function sync() { var d = fmt.format(new Date()); if (el.textContent !== d) el.textContent = d; }
+  sync(); setInterval(sync, 30000);
+})();
+</script>
 <script type="module">
 import * as THREE from 'three';
 

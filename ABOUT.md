@@ -1,6 +1,39 @@
-# v6-e: the phone edition moves like the desktop site
+# v6-g: "KaY TV" with today's day
 
-v6-e is a copy of v6-d. Only `mobile.html` changed; `index.html` is identical to v6-d's. v6-d itself was not edited.
+v6-g is a copy of v6-f with one change, on both the full site and the phone page. In "Eight steps, every go-live", the schedule card now reads **"KaY TV, <today>"** instead of "Channel 1, Tuesday". v6-f itself was not edited.
+
+- **Which day:** the visitor's own local day, so a visitor in New York and one in Sydney can see different days at the same moment.
+- **Midnight:** it turns over at the visitor's midnight. This was tested by setting the clock to 23:59 and letting it pass; it changed from Thursday to Friday.
+
+To publish, replace **both** `index.html` and `mobile.html` on GitHub with these.
+
+---
+
+# Earlier: v6-f, the clock shows each visitor's local time
+
+v6-f is a copy of v6-e with one change: the ON AIR clock in the top bar shows the **visitor's own local time and time zone** instead of always showing India time.
+
+| Visitor in | Sees |
+|------------|------|
+| New York | 09:30:25 EDT |
+| Los Angeles | 06:30:31 PDT |
+| Mumbai | 19:00:36 IST |
+| Dubai | 17:30:48 GST |
+| London | 14:30:56 BST |
+| Johannesburg | 15:31:03 SAST |
+| Sydney | 00:31:09 AEDT |
+
+- **Both pages:** this works on both the full site (`index.html`) and the phone page (`mobile.html`).
+- **Time zone label:** shown in its short form, and it updates by itself when clocks change for daylight saving.
+- **Hover:** hovering over the clock on a computer shows the full time zone name, e.g. "Your local time (America/New_York)".
+
+To publish, replace **both** `index.html` and `mobile.html` on GitHub with these.
+
+---
+
+# Earlier: v6-e, the phone edition moves like the desktop site
+
+v6-e is a copy of v6-d. Only `mobile.html` changed; `index.html` is identical to v6-d's.
 
 ## What changed on phones
 
